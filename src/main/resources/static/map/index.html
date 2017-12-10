@@ -167,7 +167,6 @@
             }
         }
         function zoomToLocation(name) {
-            
             geocoder = new google.maps.Geocoder();
             geocoder.geocode({ 'address': name }, function (results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
@@ -185,8 +184,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
     <script>
-        var server = "http://milkyway.krconv.com:3000/api/v1/";     //for using Captain Converse's database
-        //var server = "http://localhost:3000/api/v1/";             //for using local database
+        var server = "http://milkyway.krconv.com:3000/api/v1/";     //insert datadase to be used here
         $().ready(() => {
             $("#filterButton").click(filter);
             $("select[data-source]").each(function () {
