@@ -122,6 +122,7 @@
     </div>
     <script>
         var map;
+        var clusterer;
         var zoom;
         var markers = [];
         function initMap() {
@@ -129,6 +130,9 @@
                 center: { lat: 0, lng: 0 },
                 zoom: 2,
                 disableDefaultUI: true
+            });
+            clusterer = new MarkerClusterer(map, [], {
+                imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
             });
         }
         function addMarker(title, position, color) {
@@ -142,16 +146,12 @@
                     scale: 1,
                     strokeColor: 'black',
                     strokeWeight: 2
-                },
-                map: map
+                }
             });
-            markers.push(marker);
+            clusterer.addMarker(marker);
         }
         function clearMarkers() {
-            for (var i = 0; i < markers.length; i++) {
-                markers[i].setMap(null);
-            }
-            markers = [];
+            clusterer.removeMarkers(clusterer.getMarkers());
         }
         function updateMarkers() {
             if (zoom)
@@ -173,6 +173,7 @@
             }
         }
     </script>
+    <script src="./markerclusterer.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGuk0KO3EEElq3IOdMnFTZFyqgmm1vGGs&callback=initMap" async
         defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -218,7 +219,6 @@
             $("[data-filter='indicator']").each(function(index, elem) {
                 filters.indicators[$(elem).val()] = $(elem).parent().children("[data-filter='color']").val();
             })
-            console.log(filters);
 
             $.ajax({
                 url: server + "families"
