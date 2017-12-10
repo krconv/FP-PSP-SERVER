@@ -38,6 +38,8 @@
 
         .filter {
             margin: 4px auto;
+            padding: 4px;
+            background-color: rgba(0, 0, 0, 0.1);
         }
 
         .label {
@@ -53,22 +55,26 @@
                 <h1>Poverty Stoplight Map Visualization</h1>
             </div>
             <div class="row">
-                <div id="sidebar" class="col-xs-4">
+                <div id="sidebar" class="col-xs-12 col-sm-4">
                     <h2>Filters</h2>
                     <div class="filter-group panel panel-default">
                         <div class="panel-heading">Indicator</div>
                         <div class="panel-body container">
-                            <div class="filter row">
-                                <span class="label col-xs-4">Indicator</span>
-                                <select class="selector col-xs-8" data-filter="indicator" data-source="indicators" data-value="value" data-display="indicator">
-                                    <option value="">Any</option>
-                                </select>
+                            <div id="indicators">
+                                <div class="filter row">
+                                    <span class="label col-xs-4">Indicator</span>
+                                    <select class="selector col-xs-8" data-filter="indicator" data-source="indicators" data-value="value" data-display="indicator">
+                                        <option value="">Any</option>
+                                    </select>
+                                    <span class="label col-xs-4">Color</span>
+                                    <select class="selector col-xs-8" data-filter="color" data-source="colors" data-value="value" data-display="color" multiple>
+                                        <option value="">Any</option>
+                                    </select>
+                                    <button class="clearIndicator btn btn-danger pull-right">Clear</button>
+                                </div>
                             </div>
-                            <div class="filter row">
-                                <span class="label col-xs-4">Color</span>
-                                <select class="selector col-xs-8" data-filter="color" data-source="colors" data-value="value" data-display="color">
-                                    <option value="">Any</option>
-                                </select>
+                            <div class="row text-center">
+                                <button id="addIndicator" class="btn btn-xs glyphicon glyphicon-plus"></button>
                             </div>
                         </div>
                     </div>
@@ -110,7 +116,7 @@
                     </div>
                     <button id="filterButton" class="btn btn-primary pull-right">Show Results</button>
                 </div>
-                <div id="map" class="col-xs-8"></div>
+                <div id="map" class="col-xs-12 col-sm-8"></div>
             </div>
         </div>
     </div>
@@ -173,9 +179,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
     <script>
-        var server = "http://localhost:3000/api/v1/";
+        var server = "http://milkyway.krconv.com:3000/api/v1/";
         $().ready(() => {
             $("#filterButton").click(filter);
+            $("#addIndicator").click(addIndicator);
+            $("#indicators").on("click", ".clearIndicator", clearIndicator);
             $("select[data-source]").each(function () {
                 $.ajax({
                     url: server + $(this).data("source")
@@ -189,15 +197,29 @@
                 });
             });
         });
+        function addIndicator(e) {
+            $("#indicators").append($("#indicators").children().last().clone());            
+        }
+        function clearIndicator(e) {
+            if ($("#indicators").children().length > 1)
+                $(this).parent().remove();
+            else {
+                $(this).parent().children("select").prop("selectedIndex", 0);
+            }
+        }
         function filter(e) {
             clearMarkers();
             var filters = {
-                indicator: $("[data-filter='indicator']").val(),
-                color: $("[data-filter='color']").val(),
+                indicators: {},
                 country: $("[data-filter='country']").val(),
                 city: $("[data-filter='city']").val(),
                 organization: $("[data-filter='organization']").val()
             };
+            $("[data-filter='indicator']").each(function(index, elem) {
+                filters.indicators[$(elem).val()] = $(elem).parent().children("[data-filter='color']").val();
+            })
+            console.log(filters);
+
             $.ajax({
                 url: server + "families"
             }).then((data) => {
@@ -236,14 +258,20 @@
                                     var snapshots = data;
                                     for (var k = 0; k < snapshots.length; k++) {
                                         (function (survey, family, snapshot) {
-                                            if ((!filters['indicator'] || filters['indicator'] in snapshot.indicator_survey_data)
-                                                && (!filters['color'] || snapshot.indicator_survey_data[filters['indicator']] == filters['color'])) {
-                                                var color = 'blue';
-                                                if (filters['indicator']) {
-                                                    color = snapshot.indicator_survey_data[filters['indicator']];
+                                            var include = false;
+                                            for (var indicator in filters.indicators) {
+                                                if (indicator in snapshot.indicator_survey_data || indicator == "") {
+                                                    if (!filters.indicators[indicator])
+                                                        include = true;
+                                                    else
+                                                        for (var i = 0; i < filters.indicators[indicator].length; i++)
+                                                            if (filters.indicators[indicator][i] == ""
+                                                                    || filters.indicators[indicator][i] == snapshot.indicator_survey_data[indicator])
+                                                                include = true;
                                                 }
-                                                addMarker(family.name, getFamilyPosition(family), color);
                                             }
+                                            if (include)
+                                                addMarker(family.name, getFamilyPosition(family), "black");
                                         })(survey, family, snapshots[k]);
                                     }
                                 });
