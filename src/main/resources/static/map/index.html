@@ -135,19 +135,28 @@
                 imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
             });
         }
-        function addMarker(title, position, color) {
+        function addMarker(position, info) {
             var marker = new google.maps.Marker({
                 position: position,
-                title: title,
                 icon: {
                     path: 'M-32,-16a16,16 0 1,0 32,0a16,16 0 1,0 -32,0',
-                    fillColor: color,
+                    fillColor: 'black',
                     fillOpacity: 0.5,
                     scale: 1,
                     strokeColor: 'black',
                     strokeWeight: 2
                 }
             });
+            
+            with ({marker: marker, info: info}) {
+                marker.addListener('click', function() {
+                    var infowindow = new google.maps.InfoWindow({
+                        content: info
+                    });
+                    infowindow.open(map, marker);
+                });
+            }
+
             clusterer.addMarker(marker);
         }
         function clearMarkers() {
@@ -271,7 +280,7 @@
                                                 }
                                             }
                                             if (include)
-                                                addMarker(family.name, getFamilyPosition(family), "black");
+                                                addMarker(getFamilyPosition(family), buildInfo(family, snapshot));
                                         })(survey, family, snapshots[k]);
                                     }
                                 });
@@ -284,6 +293,22 @@
         function getFamilyPosition(family) {
             var raw = family.locationPositionGps.split(",").map(parseFloat);
             return { lat: raw[0], lng: raw[1] };
+        }
+        function buildInfo(family, snapshot) {
+            var info = "";
+            info += '<div class="snapshotInfo">';
+            info += '<div class="title" style="font-size:larger; font-weight:bolder">Snapshot on XX/XX/XXXX</div>';
+            info += '<table>';
+            info += '<tr><th>Family</th><td>' + family.name + '</td></tr>';
+            info += '<tr><th>Indicators</th><td><table style="margin: 5px">';
+            for (indicator in snapshot.indicator_survey_data) {
+                info += '<tr><th>' + indicator + '</th>';
+                info += '<td>' + snapshot.indicator_survey_data[indicator] + '</td></tr>'
+            }
+            info += '</table></td></tr>';
+            info += '</table>';
+            info += '</div>';
+            return info;
         }
     </script>
 </body>
