@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Poverty Spotlight Service</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous" />
+    <link href='//fonts.googleapis.com/css?family=Khula' rel='stylesheet' />
+    <style>
+        body {
+            background-color: #33873f;
+        }
+
+        h1,
+        h2 {
+            color: #33873f;
+            font-family: 'Khula', sans-serif;
+        }
+
+        .jumbotron {
+            margin-top: 30px;
+            background-color: white;
+        }
+
+        .page-header {
+            color: #33873f;
+            border-bottom: none;
+        }
+
+        #map {
+            height: 600px;
+        }
+
+        .filter {
+            margin: 4px auto;
+        }
+
+        .label {
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron container">
+            <div class="page-header">
+                <h1>Poverty Stoplight Map Visualization</h1>
+            </div>
+            <div class="row">
+                <div id="sidebar" class="col-xs-4">
+                    <h2>Filters</h2>
+                    <div class="filter-group panel panel-default">
+                        <div class="panel-heading">Indicator</div>
+                        <div class="panel-body container">
+                            <div class="filter row">
+                                <span class="label col-xs-4">Indicator</span>
+                                <select class="selector col-xs-8" data-filter="indicator" data-source="indicators" data-value="value" data-display="indicator">
+                                    <option value="">Any</option>
+                                </select>
+                            </div>
+                            <div class="filter row">
+                                <span class="label col-xs-4">Color</span>
+                                <select class="selector col-xs-8" data-filter="color" data-source="colors" data-value="value" data-display="color">
+                                    <option value="">Any</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Geography</div>
+                        <div class="panel-body container">
+                            <div class="filter row">
+                                <span class="label col-xs-4">Country</span>
+                                <select class="selector col-xs-8" data-filter="country" data-source="countries" data-value="id" data-display="country">
+                                    <option value="">Any</option>
+                                </select>
+                            </div>
+                            <div class="filter row">
+                                <span class="label col-xs-4">City</span>
+                                <select class="selector col-xs-8" data-filter="city" data-source="cities" data-value="id" data-display="city">
+                                    <option value="">Any</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Organizational</div>
+                        <div class="panel-body container">
+                            <div class="filter row">
+                                <span class="label col-xs-4">Organization</span>
+                                <select class="selector col-xs-8" data-filter="organization" data-source="organizations" data-value="id" data-display="name">
+                                    <option value="">Any</option>
+                                </select>
+                            </div>
+                            <div class="filter row">
+                                <span class="label col-xs-4">Hub</span>
+                                <select class="selector col-xs-8" disabled></select>
+                            </div>
+                            <div class="filter row">
+                                <span class="label col-xs-4">Partner</span>
+                                <select class="selector col-xs-8" disabled></select>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="filterButton" class="btn btn-primary pull-right">Show Results</button>
+                </div>
+                <div id="map" class="col-xs-8"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var map;
+        var zoom;
+        var markers = [];
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 0, lng: 0 },
+                zoom: 2,
+                disableDefaultUI: true
+            });
+        }
+        function addMarker(title, position, color) {
+            var marker = new google.maps.Marker({
+                position: position,
+                title: title,
+                icon: {
+                    path: 'M-32,-16a16,16 0 1,0 32,0a16,16 0 1,0 -32,0',
+                    fillColor: color,
+                    fillOpacity: 0.5,
+                    scale: 1,
+                    strokeColor: 'black',
+                    strokeWeight: 2
+                },
+                map: map
+            });
+            markers.push(marker);
+        }
+        function clearMarkers() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = [];
+        }
+        function updateMarkers() {
+            if (zoom)
+                clearTimeout(zoom);
+            zoom = setTimeout(zoomToMarkers, 500);
+        }
+        function zoomToMarkers() {
+            if (markers.length > 0) {
+                var bounds = new google.maps.LatLngBounds();
+                for (var i = 0; i < markers.length; i++) {
+                    bounds.extend(markers[i].getPosition());
+                }
+                map.fitBounds(bounds);
+            } else {
+                var bounds = new google.maps.LatLngBounds();
+                bounds.extend({lat: -90, lng: -180});
+                bounds.extend({lat: 90, lng: 180});
+                map.fitBounds(bounds);
+            }
+        }
+        function zoomToLocation(name) {
+            geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': name }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    map.fitBounds(results[0].geometry.bounds);
+                } else {
+                    console.log("error in Geocoder. look at zoomToLocation function");
+                }
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGuk0KO3EEElq3IOdMnFTZFyqgmm1vGGs&callback=initMap" async
+        defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <script>
+        var server = "http://milkyway.krconv.com:3000/api/v1/";     //insert datadase to be used here
+        $().ready(() => {
+            $("#filterButton").click(filter);
+            $("select[data-source]").each(function () {
+                $.ajax({
+                    url: server + $(this).data("source")
+                }).then((data) => {
+                    var options = ""
+                    for (var i = 0; i < data.length; i++) {
+                        var option = data[i];
+                        options += `<option value="${option[$(this).data("value")]}">${option[$(this).data("display")]}</option>`;
+                    }
+                    $(this).append(options);
+                });
+            });
+        });
+        function filter(e) {
+            clearMarkers();
+            var filters = {
+                indicator: $("[data-filter='indicator']").val(),
+                color: $("[data-filter='color']").val(),
+                country: $("[data-filter='country']").val(),
+                city: $("[data-filter='city']").val(),
+                organization: $("[data-filter='organization']").val()
+            };
+
+            if (filters.country){
+                if (filters.city){
+                    zoomToLocation($("[data-filter='city'] option:selected").text() + ', ' + $("[data-filter='country'] option:selected").text())
+                } else {
+                    zoomToLocation($("[data-filter='country'] option:selected").text());
+                }
+            }
+
+            $.ajax({
+                url: server + "families"
+            }).then((data) => {
+                var families = data.filter((family) => {
+                    for (var filter in filters) {
+                        if (filters[filter]) {
+                            switch (filter) {
+                                case "country":
+                                    if (family.country.id != filters[filter])
+                                        return false;
+                                case "city":
+                                    if (family.city.id != filters[filter])
+                                        return false;
+                                case "organization":
+                                    if (family.organization.id != filters[filter])
+                                        return false;
+                            }
+                        }
+                    }
+                    return true;
+                });
+                $.ajax({
+                    url: server + "surveys"
+                }).then((data) => {
+                    var surveys = data;
+                    for (var i = 0; i < surveys.length; i++) {
+                        for (var j = 0; j < families.length; j++) {
+                            (function (survey, family) {
+                                $.ajax({
+                                    url: server + "snapshots",
+                                    data: {
+                                        "survey_id": survey.id,
+                                        "family_id": family.familyId
+                                    }
+                                }).then(function (data) {
+                                    var snapshots = data;
+                                    for (var k = 0; k < snapshots.length; k++) {
+                                        (function (survey, family, snapshot) {
+                                            if ((!filters['indicator'] || filters['indicator'] in snapshot.indicator_survey_data)
+                                                && (!filters['color'] || snapshot.indicator_survey_data[filters['indicator']] == filters['color'])) {
+                                                var color = 'blue';
+                                                if (filters['indicator']) {
+                                                    color = snapshot.indicator_survey_data[filters['indicator']];
+                                                }
+                                                addMarker(family.name, getFamilyPosition(family), color);
+                                            }
+                                        })(survey, family, snapshots[k]);
+                                    }
+                                });
+                            })(surveys[i], families[j]);
+                        }
+                    }
+                });
+            });
+        }
+        function getFamilyPosition(family) {
+            var raw = family.locationPositionGps.split(",").map(parseFloat);
+            return { lat: raw[0], lng: raw[1] };
+        }
+    </script>
+</body>
+
+</html>
