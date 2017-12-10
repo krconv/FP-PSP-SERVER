@@ -166,6 +166,18 @@
                 map.fitBounds(bounds);
             }
         }
+        function zoomToLocation(name) {
+            
+            geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': name }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    map.fitBounds(results[0].geometry.bounds);
+                } else {
+                    console.log("error in Geocoder. look at zoomToLocation function");
+                }
+            });
+        }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGuk0KO3EEElq3IOdMnFTZFyqgmm1vGGs&callback=initMap" async
         defer></script>
@@ -173,7 +185,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
     <script>
-        var server = "http://localhost:3000/api/v1/";
+        var server = "http://milkyway.krconv.com:3000/api/v1/";     //for using Captain Converse's database
+        //var server = "http://localhost:3000/api/v1/";             //for using local database
         $().ready(() => {
             $("#filterButton").click(filter);
             $("select[data-source]").each(function () {
@@ -198,6 +211,15 @@
                 city: $("[data-filter='city']").val(),
                 organization: $("[data-filter='organization']").val()
             };
+
+            if (filters.country){
+                if (filters.city){
+                    zoomToLocation($("[data-filter='city'] option:selected").text() + ', ' + $("[data-filter='country'] option:selected").text())
+                } else {
+                    zoomToLocation($("[data-filter='country'] option:selected").text());
+                }
+            }
+
             $.ajax({
                 url: server + "families"
             }).then((data) => {
