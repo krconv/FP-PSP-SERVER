@@ -52,6 +52,7 @@
         }
 
         .label {
+            font-size: 14px;
             color: black;
             height: 24px;
         }
@@ -210,6 +211,17 @@
                 map.fitBounds(bounds);
             }
         }
+        function zoomToLocation(name) {
+            geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': name }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    map.fitBounds(results[0].geometry.bounds);
+                } else {
+                    console.log("error in Geocoder. look at zoomToLocation function");
+                }
+            });
+        }
     </script>
     <script src="./markerclusterer.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGuk0KO3EEElq3IOdMnFTZFyqgmm1vGGs&callback=initMap" async
@@ -296,6 +308,14 @@
             $("[data-filter='indicator']").each(function (index, elem) {
                 filters.indicators[$(elem).val()] = $(elem).parent().children("[data-filter='color']").val();
             })
+
+            if (filters.country){
+                if (filters.city){
+                    zoomToLocation($("[data-filter='b'] option:selected").text() + ', ' + $("[data-filter='country'] option:selected").text())
+                } else {
+                    zoomToLocation($("[data-filter='country'] option:selected").text());
+                }
+            }
 
             $.ajax({
                 url: server + "families"
