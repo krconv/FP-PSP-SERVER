@@ -42,8 +42,21 @@
             background-color: rgba(0, 0, 0, 0.1);
         }
 
+
+        .indicator {
+            padding: 5px;
+        }
+
+        .indicator+.indicator {
+            border-top: 1px solid gray;
+        }
+
         .label {
             color: black;
+            height: 24px;
+        }
+        select {
+            height: 24px;
         }
     </style>
 </head>
@@ -60,21 +73,29 @@
                     <div class="filter-group panel panel-default">
                         <div class="panel-heading">Indicator</div>
                         <div class="panel-body container">
-                            <div id="indicators">
-                                <div class="filter row">
-                                    <span class="label col-xs-4">Indicator</span>
-                                    <select class="selector col-xs-8" data-filter="indicator" data-source="indicators" data-value="value" data-display="indicator">
-                                        <option value="">Any</option>
-                                    </select>
-                                    <span class="label col-xs-4">Color</span>
-                                    <select class="selector col-xs-8" data-filter="color" data-source="colors" data-value="value" data-display="color" multiple>
-                                        <option value="">Any</option>
-                                    </select>
-                                    <button class="clearIndicator btn btn-danger pull-right">Clear</button>
+                            <div class="filter row">
+                                <div class="col-xs-12 container">
+                                    <div class="headings row">
+                                        <span class="label col-xs-7">Indicator</span>
+                                        <span class="label col-xs-3">Color</span>
+                                    </div>
+                                    <div id="indicators">
+                                        <div class="indicator row">
+                                            <select class="selector col-xs-6" data-filter="indicator" data-source="indicators" data-value="value" data-display="indicator">
+                                                <option value="">Any</option>
+                                            </select>
+                                            <select class="selector col-xs-5" data-filter="color" data-source="colors" data-value="value" data-display="color">
+                                                <option value="">Any</option>
+                                            </select>
+                                            <button class="clearIndicator col-xs-1 glyphicon glyphicon-remove-circle btn btn-xs btn-danger pull-right"></button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row text-center">
-                                <button id="addIndicator" class="btn btn-xs glyphicon glyphicon-plus"></button>
+                                <button id="addIndicator" class="btn btn-xs">
+                                    <span class="glyphicon glyphicon-plus"></span> add another</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -121,6 +142,21 @@
         </div>
     </div>
     <script>
+        var styles = [
+            {
+                url: './icons/3.png',
+                width: 45,
+                height: 96,
+                anchor: [30, 0],
+                textColor: '#FFFFFF',
+                textSize: 14
+            }, {
+                url: './icons/4.png',
+                width: 61,
+                height: 88,
+                textColor: '#FFFFFF',
+                textSize: 18
+            }];
         var map;
         var clusterer;
         var zoom;
@@ -132,24 +168,17 @@
                 disableDefaultUI: true
             });
             clusterer = new MarkerClusterer(map, [], {
-                imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+                styles: styles
             });
         }
         function addMarker(position, info) {
             var marker = new google.maps.Marker({
                 position: position,
-                icon: {
-                    path: 'M-32,-16a16,16 0 1,0 32,0a16,16 0 1,0 -32,0',
-                    fillColor: 'black',
-                    fillOpacity: 0.5,
-                    scale: 1,
-                    strokeColor: 'black',
-                    strokeWeight: 2
-                }
+                icon: "./icons/1.png"
             });
-            
-            with ({marker: marker, info: info}) {
-                marker.addListener('click', function() {
+
+            with ({ marker: marker, info: info }) {
+                marker.addListener('click', function () {
                     var infowindow = new google.maps.InfoWindow({
                         content: info
                     });
@@ -176,8 +205,8 @@
                 map.fitBounds(bounds);
             } else {
                 var bounds = new google.maps.LatLngBounds();
-                bounds.extend({lat: -90, lng: -180});
-                bounds.extend({lat: 90, lng: 180});
+                bounds.extend({ lat: -90, lng: -180 });
+                bounds.extend({ lat: 90, lng: 180 });
                 map.fitBounds(bounds);
             }
         }
@@ -206,9 +235,48 @@
                     $(this).append(options);
                 });
             });
+            $("[data-dependent]").each(function () {
+                var depends = $(`[data-filter="${$(this).data("dependent")}"]`);
+                if (!depends.val())
+                    $(this).addClass("hidden");
+                with ({ child: this, depends: depends }) {
+                    depends.change(function (e) {
+                        if (!depends.val())
+                            $(child).addClass("hidden");
+                        else
+                            $(child).removeClass("hidden");
+                    });
+                }
+            });
         });
         function addIndicator(e) {
-            $("#indicators").append($("#indicators").children().last().clone());            
+            var indicator = $(`
+                    <div class="indicator row">
+                        <select class="selector col-xs-6" data-filter="indicator" data-source="indicators" data-value="value" data-display="indicator">
+                            <option value="">Any</option>
+                        </select>
+                        <select class="selector col-xs-5" data-filter="color" data-source="colors" data-value="value" data-display="color">
+                            <option value="">Any</option>
+                        </select>
+                        <button class="clearIndicator col-xs-1 glyphicon glyphicon-remove-circle btn btn-xs btn-danger pull-right"></button>                                            
+                    </div>`);
+
+            $("#indicators").append(indicator);
+            with ({ indicator: indicator }) {
+
+                indicator.children("select[data-source]").each(function () {
+                    $.ajax({
+                        url: server + $(this).data("source")
+                    }).then((data) => {
+                        var options = ""
+                        for (var i = 0; i < data.length; i++) {
+                            var option = data[i];
+                            options += `<option value="${option[$(this).data("value")]}">${option[$(this).data("display")]}</option>`;
+                        }
+                        $(this).append(options);
+                    });
+                });
+            }
         }
         function clearIndicator(e) {
             if ($("#indicators").children().length > 1)
@@ -225,7 +293,7 @@
                 city: $("[data-filter='city']").val(),
                 organization: $("[data-filter='organization']").val()
             };
-            $("[data-filter='indicator']").each(function(index, elem) {
+            $("[data-filter='indicator']").each(function (index, elem) {
                 filters.indicators[$(elem).val()] = $(elem).parent().children("[data-filter='color']").val();
             })
 
@@ -275,7 +343,7 @@
                                                     else
                                                         for (var i = 0; i < filters.indicators[indicator].length; i++)
                                                             if (filters.indicators[indicator][i] == ""
-                                                                    || filters.indicators[indicator][i] == snapshot.indicator_survey_data[indicator])
+                                                                || filters.indicators[indicator][i] == snapshot.indicator_survey_data[indicator])
                                                                 include = true;
                                                 }
                                             }
