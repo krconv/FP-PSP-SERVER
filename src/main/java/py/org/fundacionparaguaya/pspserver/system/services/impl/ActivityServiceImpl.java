@@ -1,9 +1,5 @@
 package py.org.fundacionparaguaya.pspserver.system.services.impl;
 
-import java.util.List;
-import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +10,13 @@ import py.org.fundacionparaguaya.pspserver.system.mapper.ActivityMapper;
 import py.org.fundacionparaguaya.pspserver.system.repositories.ActivityRepository;
 import py.org.fundacionparaguaya.pspserver.system.services.ActivityService;
 
+import java.util.List;
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkArgument;
 
 @Service
 public class ActivityServiceImpl implements ActivityService {
-
-    private Logger LOG = LoggerFactory.getLogger(ActivityServiceImpl.class);
 
     private ActivityRepository activityRepository;
 

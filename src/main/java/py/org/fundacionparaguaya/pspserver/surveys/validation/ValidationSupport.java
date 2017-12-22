@@ -7,6 +7,7 @@ import java.util.*;
  */
 
 public class ValidationSupport {
+
     private static final ValidationResult valid = new ValidationResult(){
 
         public boolean isValid(){ return true; }
@@ -19,32 +20,6 @@ public class ValidationSupport {
         }
     };
 
-    private static final ValidationResults validList = new ValidationResults() {
-        @Override
-        public boolean isValid() {
-            return true;
-        }
-
-        @Override
-        public Map<String, Collection<String>> asMap() {
-            return Collections.emptyMap();
-        }
-
-        @Override
-        public List<ValidationResult> asList() {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public boolean add(ValidationResult result) {
-            return false;
-        }
-
-        @Override
-        public boolean addAll(ValidationResults result) {
-            return false;
-        }
-    };
 
     static ValidationResult validResult(){
         return valid;

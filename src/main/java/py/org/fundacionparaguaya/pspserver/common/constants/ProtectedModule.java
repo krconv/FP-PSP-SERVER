@@ -11,16 +11,26 @@ public enum ProtectedModule implements ProtectableModule {
 
     ORGANIZATIONS {
         private String[] urls = {
+                API_ROOT + "/activities",
+                API_ROOT + "/activities/*",
+                API_ROOT + "/applications",
+                API_ROOT + "/applications/*",
                 API_ROOT + "/organizations",
                 API_ROOT + "/organizations/*",
+                API_ROOT + "/user-applications",
+                API_ROOT + "/users-applications/*",
                 API_ROOT + "/users",
                 API_ROOT + "/users/*",
+                API_ROOT + "/user-roles",
+                API_ROOT + "/user-roles/*",
                 API_ROOT + "/families",
                 API_ROOT + "/families/*",
                 API_ROOT + "/cities",
                 API_ROOT + "/cities/*",
                 API_ROOT + "/countries",
                 API_ROOT + "/countries/*",
+                API_ROOT + "/parameters",
+                API_ROOT + "/parameters/*",
                 API_ROOT + "/people",
                 API_ROOT + "/people/*",
         };

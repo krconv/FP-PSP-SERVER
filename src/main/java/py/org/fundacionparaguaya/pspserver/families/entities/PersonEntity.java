@@ -1,17 +1,23 @@
 package py.org.fundacionparaguaya.pspserver.families.entities;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.id.enhanced.SequenceStyleGenerator;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
 
 import com.google.common.base.MoreObjects;
 
@@ -25,21 +31,36 @@ import py.org.fundacionparaguaya.pspserver.system.entities.CountryEntity;
 public class PersonEntity extends BaseEntity {
 
 	private static final long serialVersionUID = 1762584396723284335L;
-
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="ps_families.person_person_id_seq")
-    @SequenceGenerator(name="ps_families.person_person_id_seq", sequenceName="ps_families.person_person_id_seq", allocationSize=1)
+    @GenericGenerator(
+            name = ""
+                    + "personSequenceGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = SequenceStyleGenerator.SCHEMA, value = "ps_families"),
+                    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "person_person_id_seq"),
+                    @Parameter(name = SequenceStyleGenerator.INITIAL_PARAM, value = "1"),
+                    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1")
+            }
+    )
+    @GeneratedValue(generator = "personSequenceGenerator")
 	@Column(name = "person_id")
 	private Long personId;
 	
-	private String name;
+	@Column(name = "first_name")
+	private String firstName;
 	
-	private String lastname;
+	@Column(name = "last_name")
+	private String lastName;
 	
+	@Column(name = "identification_type")
 	private String identificationType;
 	
+	@Column(name = "identification_number")
 	private String identificationNumber;
 	
+	@Column(name="person_role")
 	private String personRole;
 	
 	@Column(name = "gender")
@@ -47,15 +68,18 @@ public class PersonEntity extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 	
+	@Column(name="activity_primary")
 	private String activityPrimary;
 	
+	@Column(name="activity_secundary")
 	private String activitySecundary;
 	
+	@Column(name="phone_number")
 	private String phoneNumber;
 	
 	@ManyToOne(targetEntity = CountryEntity.class)
-	@JoinColumn(name = "country")
-	private CountryEntity country;
+	@JoinColumn(name = "country_of_birth")
+	private CountryEntity countryOfBirth;
 	
 	@ManyToOne(targetEntity = CityEntity.class)
 	@JoinColumn(name = "city")
@@ -64,6 +88,10 @@ public class PersonEntity extends BaseEntity {
 	@ManyToOne(targetEntity = FamilyEntity.class)
 	@JoinColumn(name = "family_id")
 	private FamilyEntity family;
+	
+	@Column(name="birthdate")
+	@Convert(converter = LocalDateConverter.class)
+    private LocalDate birthdate;
 	
 	public FamilyEntity getFamily() {
 		return family;
@@ -81,20 +109,20 @@ public class PersonEntity extends BaseEntity {
 		this.personId = personId;
 	}
 
-	public String getName() {
-		return name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getLastname() {
-		return lastname;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getIdentificationType() {
@@ -153,12 +181,12 @@ public class PersonEntity extends BaseEntity {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public CountryEntity getCountry() {
-		return country;
+	public CountryEntity getCountryOfBirth() {
+		return countryOfBirth;
 	}
 
-	public void setCountry(CountryEntity country) {
-		this.country = country;
+	public void setCountryOfBirth(CountryEntity countryOfBirth) {
+		this.countryOfBirth = countryOfBirth;
 	}
 
 	public CityEntity getCity() {
@@ -167,6 +195,14 @@ public class PersonEntity extends BaseEntity {
 
 	public void setCity(CityEntity city) {
 		this.city = city;
+	}
+
+	public LocalDate getBirthdate() {
+		return birthdate;
+	}
+
+	public void setBirthdate(LocalDate birthdate) {
+		this.birthdate = birthdate;
 	}
 
 	@Override
@@ -188,8 +224,8 @@ public class PersonEntity extends BaseEntity {
 	public String toString() {
 		return MoreObjects.toStringHelper(this)
 				.add("personId", personId)
-				.add("name", name)
-				.add("lastname", lastname)
+				.add("firstName", firstName)
+				.add("lastName", lastName)
 				.add("identificationType", identificationType)
 				.add("identificationNumber", identificationNumber)
 				.add("personRole", personRole)
@@ -197,9 +233,10 @@ public class PersonEntity extends BaseEntity {
 				.add("activityPrimary", activityPrimary)
 				.add("activitySecundary", activitySecundary)
 				.add("phoneNumber", phoneNumber)
-				.add("country", country.toString())
-				.add("city", city.toString())
-				.add("family", family.toString())
+				.add("countryOfBirth", countryOfBirth)
+				//.add("city", city.toString())
+				//.add("family", family.toString())
+				.add("birthdate", birthdate)
 				.toString();
 	}
 	

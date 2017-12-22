@@ -121,7 +121,7 @@ public class JSONBUserType implements ParameterizedType, UserType {
             return true;
         }
 
-        if ((x == null) || (y == null)) {
+        if (x == null || y == null) {
             return false;
         }
 
@@ -130,7 +130,7 @@ public class JSONBUserType implements ParameterizedType, UserType {
 
     @Override
     public int hashCode(Object x) throws HibernateException {
-        assert (x != null);
+        assert x != null;
         return x.hashCode();
     }
 

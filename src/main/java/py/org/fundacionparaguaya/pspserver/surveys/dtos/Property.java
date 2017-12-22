@@ -1,6 +1,15 @@
 package py.org.fundacionparaguaya.pspserver.surveys.dtos;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.function.Function;
 
 /*
  * FP-PSP Server
@@ -14,27 +23,94 @@ import java.util.ArrayList;
  * Do not edit the class manually.
  */
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.*;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 /**
  * Holds info representing the definition of the field
  */
 @ApiModel(description = "Holds info representing the definition of the field")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Property   {
+public class Property  implements Serializable {
 
+	@JsonProperty("type")
+    private TypeEnum type = null;
+
+    @JsonProperty("title")
+    private PropertyTitle title = null;
+
+    @JsonProperty("default")
+    private Object defaultValue;
+
+    @JsonProperty("format")
+    private FormatEnum format = null;
+
+    @JsonProperty("enum")
+    private List<Object> enumValues = null;
+
+    @JsonProperty("enumNames")
+    private List<Object> enumNames = null;
+    
+    @JsonProperty("items")
+    private Items items = null;
+
+    public Property type(TypeEnum type) {
+        this.type = type;
+        return this;
+    }
+
+    public Property format(FormatEnum formatEnum) {
+        this.format = formatEnum;
+        return this;
+    }
+
+    public Property enumValues(List<Object> enumValues) {
+        this.enumValues = enumValues;
+        return this;
+    }
+
+    public static List<Object> getDefaultEnumValues() {
+        return Arrays.asList("red", "blue", "green");
+    }
+    
+    public Property itemsValue(Items items) {
+        this.items = items;
+        return this;
+    }
+    /**
+     * The type of this field
+     * @return type
+     **/
+    @JsonProperty("type")
+    @ApiModelProperty(value = "The type of this field")
+    public TypeEnum getType() {
+        return type;
+    }
+
+    public void setType(TypeEnum type) {
+        this.type = type;
+    }
+
+    public Property title(PropertyTitle title) {
+        this.title = title;
+        return this;
+    }
+
+    /**
+     * The title of this field
+     * @return title
+     **/
+    @JsonProperty("title")
+    @ApiModelProperty(value = "The title of this field")
+    public PropertyTitle getTitle() {
+        return title;
+    }
+
+    public void setTitle(PropertyTitle title) {
+        this.title = title;
+    }
+    
+    @JsonProperty("items")
+    public Items getItems() {
+        return items;
+    }
 
     public boolean valueIsOfValidType(Object value) {
         return this.getType().apply(value);
@@ -118,7 +194,7 @@ public class Property   {
      * The type of this field
      */
     public enum FormatEnum {
-        DATA_URL("data-url");
+        DATA_URL("data-url"), DATE("date");
 
         private String value;
 
@@ -126,7 +202,7 @@ public class Property   {
             this.value = value;
         }
 
-        public static List<String> FILE_TYPES = Arrays.asList("video", "image");
+        public static final List<String> FILE_TYPES = Arrays.asList("video", "image");
 
         @Override
         @JsonValue
@@ -158,87 +234,7 @@ public class Property   {
         }
     }
 
-    @JsonProperty("type")
-    private TypeEnum type = null;
-
-    @JsonProperty("title")
-    private PropertyTitle title = null;
-
-    @JsonProperty("default")
-    private Object defaultValue;
-
-    @JsonProperty("format")
-    private FormatEnum format = null;
-
-    @JsonProperty("enum")
-    private List<Object> enumValues = null;
-
-    @JsonProperty("enumNames")
-    private List<Object> enumNames = null;
     
-    @JsonProperty("items")
-    private Items items = null;
-
-    public Property type(TypeEnum type) {
-        this.type = type;
-        return this;
-    }
-
-    public Property format(FormatEnum formatEnum) {
-        this.format = formatEnum;
-        return this;
-    }
-
-    public Property enumValues(List<Object> enumValues) {
-        this.enumValues = enumValues;
-        return this;
-    }
-
-    public static List<Object> getDefaultEnumValues() {
-        return Arrays.asList("red", "blue", "green");
-    }
-    
-    public Property itemsValue(Items items) {
-        this.items = items;
-        return this;
-    }
-    /**
-     * The type of this field
-     * @return type
-     **/
-    @JsonProperty("type")
-    @ApiModelProperty(value = "The type of this field")
-    public TypeEnum getType() {
-        return type;
-    }
-
-    public void setType(TypeEnum type) {
-        this.type = type;
-    }
-
-    public Property title(PropertyTitle title) {
-        this.title = title;
-        return this;
-    }
-
-    /**
-     * The title of this field
-     * @return title
-     **/
-    @JsonProperty("title")
-    @ApiModelProperty(value = "The title of this field")
-    public PropertyTitle getTitle() {
-        return title;
-    }
-
-    public void setTitle(PropertyTitle title) {
-        this.title = title;
-    }
-    
-    @JsonProperty("items")
-    public Items getItems() {
-        return items;
-    }
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -281,7 +277,7 @@ public class Property   {
         return o.toString().replace("\n", "\n    ");
     }
     
-    public class Items {
+    public class Items implements Serializable {
         @JsonProperty("type")
         private TypeEnum type = null;
         

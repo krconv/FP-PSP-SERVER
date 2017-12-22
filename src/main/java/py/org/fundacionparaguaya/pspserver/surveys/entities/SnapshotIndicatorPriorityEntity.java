@@ -1,22 +1,16 @@
 package py.org.fundacionparaguaya.pspserver.surveys.entities;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
-
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.SurveyData;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 

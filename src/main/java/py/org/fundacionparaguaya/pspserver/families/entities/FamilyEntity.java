@@ -6,29 +6,44 @@ import py.org.fundacionparaguaya.pspserver.network.entities.OrganizationEntity;
 import py.org.fundacionparaguaya.pspserver.system.entities.CityEntity;
 import py.org.fundacionparaguaya.pspserver.system.entities.CountryEntity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
 import com.google.common.base.MoreObjects;
 
 @Entity
 @Table(name = "family", schema = "ps_families")
 public class FamilyEntity extends BaseEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ps_families.family_family_id_seq")
-	@SequenceGenerator(name = "ps_families.family_family_id_seq", sequenceName = "ps_families.family_family_id_seq", allocationSize = 1)
-	@Column(name = "family_id")
+    
+    @Id
+    @GenericGenerator(
+            name = ""
+                    + "familySequenceGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = SequenceStyleGenerator.SCHEMA, value = "ps_families"),
+                    @Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "family_family_id_seq"),
+                    @Parameter(name = SequenceStyleGenerator.INITIAL_PARAM, value = "1"),
+                    @Parameter(name = SequenceStyleGenerator.INCREMENT_PARAM, value = "1")
+            }
+    )
+    @GeneratedValue(generator = "familySequenceGenerator")
+    @Column(name = "family_id")
 	private Long familyId;
 
 	private String name;
+	
+	private String code;
 
 	@ManyToOne(targetEntity = CountryEntity.class)
 	@JoinColumn(name = "country")
@@ -42,7 +57,7 @@ public class FamilyEntity extends BaseEntity {
 
 	private String locationPositionGps;
 
-	@ManyToOne(targetEntity = PersonEntity.class)
+	@ManyToOne(targetEntity = PersonEntity.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "person_reference_id")
 	private PersonEntity person;
 
@@ -70,6 +85,14 @@ public class FamilyEntity extends BaseEntity {
 		this.name = name;
 	}
 
+	public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+    
 	public CountryEntity getCountry() {
 		return country;
 	}
@@ -147,6 +170,7 @@ public class FamilyEntity extends BaseEntity {
 		return MoreObjects.toStringHelper(this)
 				.add("familyId", familyId)
 				.add("name", name)
+				.add("code", code)
 				.add("country", country.toString())
 				.add("city", city.toString())
 				.add("locationType", locationType)

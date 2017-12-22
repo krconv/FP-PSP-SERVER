@@ -5,13 +5,7 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;
 import py.org.fundacionparaguaya.pspserver.common.entities.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import javax.persistence.*;
 @Entity
 @Table(name = "countries", schema = "system")
 public class CountryEntity extends BaseEntity {
@@ -32,6 +26,15 @@ public class CountryEntity extends BaseEntity {
 	private Long id;
 	
 	private String country;
+	
+	@Column(name = "numeric_code")
+	private String numericCode;
+
+	@Column(name = "alfa_2_code")
+	private String alfa2Code;
+
+	@Column(name = "alfa_3_code")
+	private String alfa3Code;
 
 	public Long getId() {
 		return id;
@@ -49,9 +52,34 @@ public class CountryEntity extends BaseEntity {
 		this.country = country;
 	}
 	
+	public String getNumericCode() {
+        return numericCode;
+    }
+
+    public void setNumericCode(String numericCode) {
+        this.numericCode = numericCode;
+    }
+
+    public String getAlfa2Code() {
+        return alfa2Code;
+    }
+
+    public void setAlfa2Code(String alfa2Code) {
+        this.alfa2Code = alfa2Code;
+    }
+
+    public String getAlfa3Code() {
+        return alfa3Code;
+    }
+
+    public void setAlfa3Code(String alfa3Code) {
+        this.alfa3Code = alfa3Code;
+    }
+	
 	@Override
 	public String toString() {
-		return "Country [id=" + id + ", country=" + country + "]";
+		return "Country [id=" + id + ", country=" + country + ", numericCode=" + numericCode + ", alfa2Code="
+                + alfa2Code + ", alfa3code=" + alfa3Code + "]";
 	}
 
 	@Override

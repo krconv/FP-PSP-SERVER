@@ -18,13 +18,14 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * SurveyDefinition
  */
 @Access(AccessType.FIELD)
-public class SurveyDefinition implements StoreableDefinition  {
+public class SurveyDefinition implements StoreableDefinition, Serializable {
 
     private Long id;
 

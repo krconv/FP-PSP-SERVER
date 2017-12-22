@@ -4,5 +4,5 @@ package py.org.fundacionparaguaya.pspserver.surveys.validation;
  * Created by rodrigovillalba on 10/26/17.
  */
 public interface SurveyUISchemaValidatorFunction<SurveyUISchema, SnapshotPropertyAttributeEntity, ValidationResult> {
-    public ValidationResult apply(SurveyUISchema schema, SnapshotPropertyAttributeEntity attribute);
+    ValidationResult apply(SurveyUISchema schema, SnapshotPropertyAttributeEntity attribute);
 }

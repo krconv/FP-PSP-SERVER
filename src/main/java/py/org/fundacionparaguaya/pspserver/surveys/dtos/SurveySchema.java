@@ -11,6 +11,7 @@ package py.org.fundacionparaguaya.pspserver.surveys.dtos;
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,7 +24,7 @@ import java.util.List;
  * The MODEL SCHEMA definition of the survey
  */
 @ApiModel(description = "The MODEL SCHEMA definition of the survey")
-public class SurveySchema   {
+public class SurveySchema implements Serializable {
 
     @JsonProperty("title")
     private String title = null;

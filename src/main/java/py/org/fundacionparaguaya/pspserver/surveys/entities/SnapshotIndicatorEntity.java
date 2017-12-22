@@ -1,24 +1,22 @@
 package py.org.fundacionparaguaya.pspserver.surveys.entities;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;
-import py.org.fundacionparaguaya.pspserver.surveys.entities.types.SecondJSONBUserType;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.SurveyData;
-
-import java.util.List;
-
+import py.org.fundacionparaguaya.pspserver.surveys.entities.types.SecondJSONBUserType;
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by rodrigovillalba on 10/17/17.
  */
 @Entity
 @Table(schema = "data_collect", name = "snapshots_indicators")
-public class SnapshotIndicatorEntity implements StoreableSnapshot {
+public class SnapshotIndicatorEntity implements StoreableSnapshot, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -104,7 +102,7 @@ public class SnapshotIndicatorEntity implements StoreableSnapshot {
 
     @Column(name = "additional_properties")
     @Type(type = "py.org.fundacionparaguaya.pspserver.surveys.entities.types.SecondJSONBUserType", parameters = {
-            @org.hibernate.annotations.Parameter(name = SecondJSONBUserType.CLASS, value = "py.org.fundacionparaguaya.pspserver.surveys.dtos.SurveyData")})
+            @Parameter(name = SecondJSONBUserType.CLASS, value = "py.org.fundacionparaguaya.pspserver.surveys.dtos.SurveyData")})
     private SurveyData additionalProperties;
     
     @OneToMany(mappedBy="snapshotIndicator" )

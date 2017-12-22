@@ -1,14 +1,6 @@
 package py.org.fundacionparaguaya.pspserver.system.services.impl;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import py.org.fundacionparaguaya.pspserver.common.exceptions.UnknownResourceException;
 import py.org.fundacionparaguaya.pspserver.system.dtos.CountryDTO;
 import py.org.fundacionparaguaya.pspserver.system.entities.CountryEntity;
@@ -16,12 +8,15 @@ import py.org.fundacionparaguaya.pspserver.system.mapper.CountryMapper;
 import py.org.fundacionparaguaya.pspserver.system.repositories.CountryRepository;
 import py.org.fundacionparaguaya.pspserver.system.services.CountryService;
 
+import java.util.List;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkArgument;
+
 
 
 @Service
 public class CountryServiceImpl implements CountryService {
-
-	private Logger LOG = LoggerFactory.getLogger(CountryServiceImpl.class);
 
 	CountryRepository countryRepository;
 	

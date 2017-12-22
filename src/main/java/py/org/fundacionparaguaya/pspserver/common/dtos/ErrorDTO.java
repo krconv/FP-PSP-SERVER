@@ -2,11 +2,11 @@ package py.org.fundacionparaguaya.pspserver.common.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import py.org.fundacionparaguaya.pspserver.common.constants.ErrorCodes;
 
 import java.io.Serializable;
 import java.util.*;
+
+
 
 /**
  * View Model for transferring developerMessage message with a list of field errors.

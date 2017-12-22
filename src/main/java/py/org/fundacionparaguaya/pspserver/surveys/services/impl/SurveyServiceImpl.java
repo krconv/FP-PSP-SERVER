@@ -3,15 +3,17 @@ package py.org.fundacionparaguaya.pspserver.surveys.services.impl;
 import org.springframework.stereotype.Service;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.CustomParameterizedException;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.UnknownResourceException;
+import py.org.fundacionparaguaya.pspserver.surveys.dtos.*;
 import py.org.fundacionparaguaya.pspserver.surveys.entities.StopLightType;
 import py.org.fundacionparaguaya.pspserver.surveys.entities.SurveyEntity;
 import py.org.fundacionparaguaya.pspserver.surveys.mapper.PropertyAttributeSupport;
 import py.org.fundacionparaguaya.pspserver.surveys.mapper.SurveyMapper;
-import py.org.fundacionparaguaya.pspserver.surveys.repositories.SnapshotEconomicRepository;
 import py.org.fundacionparaguaya.pspserver.surveys.repositories.SurveyRepository;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SurveyService;
-import py.org.fundacionparaguaya.pspserver.surveys.validation.*;
-import py.org.fundacionparaguaya.pspserver.surveys.dtos.*;
+import py.org.fundacionparaguaya.pspserver.surveys.validation.MultipleSchemaValidator;
+import py.org.fundacionparaguaya.pspserver.surveys.validation.ValidationResult;
+import py.org.fundacionparaguaya.pspserver.surveys.validation.ValidationResults;
+import py.org.fundacionparaguaya.pspserver.surveys.validation.ValidationSupport;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +33,6 @@ import static py.org.fundacionparaguaya.pspserver.surveys.validation.SurveyUISch
 @Service
 public class SurveyServiceImpl implements SurveyService {
 
-    private final SnapshotEconomicRepository economicRepository;
 
     private final SurveyRepository repo;
 
@@ -39,9 +40,7 @@ public class SurveyServiceImpl implements SurveyService {
 
     private final SurveyMapper mapper;
 
-    public SurveyServiceImpl(SnapshotEconomicRepository economicRepository,
-                             SurveyRepository repo, PropertyAttributeSupport propertyAttributeSupport, SurveyMapper mapper) {
-        this.economicRepository = economicRepository;
+    public SurveyServiceImpl(SurveyRepository repo, PropertyAttributeSupport propertyAttributeSupport, SurveyMapper mapper) {
         this.repo = repo;
         this.propertyAttributeSupport = propertyAttributeSupport;
         this.mapper = mapper;
@@ -69,7 +68,7 @@ public class SurveyServiceImpl implements SurveyService {
 
     private ValidationResults validateSchemas(NewSurveyDefinition surveyDefinition) {
         ValidationResults results = ValidationSupport.validResults();
-        MultipleSchemaValidator schemaValidator = all(SchemaValidator.presentInSchema(), markedAsRequired());
+        MultipleSchemaValidator schemaValidator = all(presentInSchema(), markedAsRequired());
 
         propertyAttributeSupport.getPropertyAttributes().stream()
                 .filter(attr -> attr.getStoptLightType() == StopLightType.MANDATORY)

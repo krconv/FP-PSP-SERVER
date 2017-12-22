@@ -1,27 +1,24 @@
 package py.org.fundacionparaguaya.pspserver.web.error;
 
-import java.nio.file.AccessDeniedException;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import py.org.fundacionparaguaya.pspserver.common.constants.ErrorCodes;
 import py.org.fundacionparaguaya.pspserver.common.dtos.ErrorDTO;
 import py.org.fundacionparaguaya.pspserver.common.dtos.FieldErrorDTO;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.CustomParameterizedException;
 
+import java.util.List;
 /**
  * This controller advice is inspired by JHipster Example app:
  * https://github.com/jhipster/jhipster-sample-app

@@ -5,5 +5,5 @@ package py.org.fundacionparaguaya.pspserver.common.constants;
  */
 public class ProtectedResource  {
 
-    public static String API_ROOT = "/api/v1";
+    public static final String API_ROOT = "/api/v1";
 }

@@ -1,4 +1,7 @@
+[![Build Status](https://travis-ci.org/FundacionParaguaya/FP-PSP-SERVER.svg?branch=develop)](https://travis-ci.org/FundacionParaguaya/FP-PSP-SERVER)
+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9cc3f693601442c89ba35f9c92268c6e)](https://www.codacy.com/app/alefq/FP-PSP-SERVER?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FundacionParaguaya/FP-PSP-SERVER&amp;utm_campaign=Badge_Grade)
+
 
 # Poverty Stoplight
 Fundación Paraguaya (FP from now on) has developed a methodology called 

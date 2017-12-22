@@ -4,5 +4,5 @@ package py.org.fundacionparaguaya.pspserver.surveys.validation;
  * Created by rodrigovillalba on 10/26/17.
  */
 public interface MultipleSchemaValidatorFunction<SurveySchema, String, Object, ValidationResults> {
-    public ValidationResults apply(SurveySchema schema, String propertyName, Object propertyValue);
+    ValidationResults apply(SurveySchema schema, String propertyName, Object propertyValue);
 }

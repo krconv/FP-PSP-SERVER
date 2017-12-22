@@ -23,18 +23,24 @@ public interface SurveyUISchemaValidator extends SurveyUISchemaValidatorFunction
     }
 
     static ValidationResult validateInEconomics(SurveyUISchema schema, PropertyAttributeEntity attr) {
-        if (!schema.getGroupEconomics().contains(attr.getPropertySchemaName())) {
+        
+        if (schema.getGroupEconomics()==null) {
+            return ValidationResult.invalid("Group Economic don't exists");
+        } else if (!schema.getGroupEconomics().contains(attr.getPropertySchemaName())) {
             return ValidationResult.invalid(attr.getPropertySchemaName(), "Property '" + attr.getPropertySystemName() + "' should be in '" + SurveyUISchema.UI_GROUP_ECONOMICS + "' in 'survey_ui_schema'");
-
-        }
+        } 
+        
         return ValidationResult.valid();
     }
 
     static ValidationResult validateInIndicators(SurveyUISchema schema, PropertyAttributeEntity attr) {
-        if (!schema.getGroupIndicators().contains(attr.getPropertySchemaName())) {
+        
+        if (schema.getGroupIndicators()==null) {
+            return ValidationResult.invalid("Group Indicators don't exists");
+        } else if (!schema.getGroupIndicators().contains(attr.getPropertySchemaName())) {
             return ValidationResult.invalid(attr.getPropertySchemaName(), "Property '" + attr.getPropertySystemName() + "' should be in '" + SurveyUISchema.UI_GROUP_INDICTATORS + "' in 'survey_ui_schema'");
 
-        }
+        } 
         return ValidationResult.valid();
     }
 }

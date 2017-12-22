@@ -24,9 +24,7 @@ Client id : barClientIdPassword
 
 Client secret : secret
 
-User name : admin
-
-User password : password
+Username : admin
 
 ```
 curl -X POST -vu barClientIdPassword:secret 'http://localhost:8080/oauth/token?username=admin&password=[your_password]&grant_type=password'
@@ -47,17 +45,24 @@ curl -X POST -vu barClientIdPassword:secret 'http://localhost:8080/oauth/token?u
 ### Access secure resource with token
 
 ```
-curl -i -H "Authorization: Bearer [access_token]" http://localhost:8080/api/v1/users
+curl -i -H "Authorization: Bearer $ACESS_TOKEN" http://localhost:8080/api/v1/users
 ```
 
 ### Result
 
 ```
 [{
-	"id":1,
 	"username":"admin",
 	"active":true
 }]
+```
+
+### Logout
+
+To logout of the application you simply need to revoke your access token by invoking:
+
+```
+curl -X GET -H "Authorization: Bearer $ACCESS_TOKEN" http://localhost:8080/oauth/revoke-token
 ```
 
 # Default roles and users
@@ -68,6 +73,6 @@ These are default users with their roles provided by the application.
 | --------- | -------------- | ---------- |
 | admin | ROLE_ROOT | Can do everything |
 | hub_admin| ROLE_HUB_ADMIN | Can manage everything related to a HUB application |
-| app_admin | ROLE_APP_ADMIN | Can manage everything related to an organization or parter |
+| app_admin | ROLE_APP_ADMIN | Can manage everything related to an organization or partner |
 | user | ROLE_USER | Can see information about his/her organization: famliies, indicators |
-| | ROLE_SURVEY_USER | Can fill surveys and visualize its state |
+| survey_user | ROLE_SURVEY_USER | Can fill surveys and visualize its state |

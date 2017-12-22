@@ -1,25 +1,22 @@
 package py.org.fundacionparaguaya.pspserver.security.services.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-
-import py.org.fundacionparaguaya.pspserver.security.entities.UserEntity;
-import py.org.fundacionparaguaya.pspserver.security.repositories.UserRepository;
-import py.org.fundacionparaguaya.pspserver.security.dtos.UserDTO;
-import py.org.fundacionparaguaya.pspserver.security.services.UserService;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.CustomParameterizedException;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.UnknownResourceException;
+import py.org.fundacionparaguaya.pspserver.security.dtos.UserDTO;
+import py.org.fundacionparaguaya.pspserver.security.entities.UserEntity;
 import py.org.fundacionparaguaya.pspserver.security.mapper.UserMapper;
+import py.org.fundacionparaguaya.pspserver.security.repositories.UserRepository;
+import py.org.fundacionparaguaya.pspserver.security.services.UserService;
+
+import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
 public class UserServiceImpl implements UserService {

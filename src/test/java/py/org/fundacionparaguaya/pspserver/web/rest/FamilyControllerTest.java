@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import py.org.fundacionparaguaya.pspserver.families.dtos.FamilyDTO;
 import py.org.fundacionparaguaya.pspserver.families.dtos.PersonDTO;
+import py.org.fundacionparaguaya.pspserver.families.services.FamilyMapService;
 import py.org.fundacionparaguaya.pspserver.families.services.FamilyService;
 import py.org.fundacionparaguaya.pspserver.network.dtos.ApplicationDTO;
 import py.org.fundacionparaguaya.pspserver.network.dtos.OrganizationDTO;
@@ -47,6 +48,9 @@ public class FamilyControllerTest {
 
 	@MockBean
 	FamilyService familyService;
+	
+	@MockBean
+	FamilyMapService familyMapService;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -56,6 +60,7 @@ public class FamilyControllerTest {
 	public void setup() {
 		mockFamily = FamilyDTO.builder()
 				.name("foo.family")
+				.code("foo.code")
 				.country(getCountryTest())
 				.city(getCityTest())
 				.locationType("foo.locationType")
@@ -108,8 +113,8 @@ public class FamilyControllerTest {
 	private PersonDTO getPersonTest() {
 		PersonDTO dto = new PersonDTO();
 		dto.setPersonId(new Long(1));
-		dto.setName("foo.NAME");
-		dto.setLastname("foo.LASTNAME");
+		dto.setFirstName("foo.FIRSTNAME");
+		dto.setLastName("foo.LASTNAME");
 		return dto;
 	}
 

@@ -56,15 +56,15 @@ public class PersonControllerTest {
     @Before
     public void setup() {
         mockPerson = PersonDTO.builder()
-                .name("foo.name")
-                .lastname("foo.lastname")
+                .firstName("foo.name")
+                .lastName("foo.lastname")
                 .identificationType("foo.identificationType")
                 .identificationNumber("foo.identificationNumber")
                 .personRole("foo.personRole")
                 .gender(Gender.M)
                 .activityPrimary("foo.activityPrimary")
                 .activitySecundary("foo.activitySecundary")
-                .country(getCountryTest())
+                .countryOfBirth(getCountryTest())
                 .city(getCityTest())
                 .family(getFamilynTest())
                 .build();
@@ -78,10 +78,10 @@ public class PersonControllerTest {
         mockMvc.perform(post("/api/v1/people").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name", is(mockPerson.getName())));
+                .andExpect(jsonPath("$.firstName", is(mockPerson.getFirstName())));
     }
     
-    @Test
+   @Test
     public void requestingPostPersonShouldUpdatePerson() throws Exception {
     	Long personId = 999L;
         when(personService.updatePerson(eq(personId), anyObject())).thenReturn(mockPerson);
@@ -90,7 +90,7 @@ public class PersonControllerTest {
         mockMvc.perform(put("/api/v1/people/{personId}", personId).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is(mockPerson.getName())));
+                .andExpect(jsonPath("$.firstName", is(mockPerson.getFirstName())));
 
     }
     

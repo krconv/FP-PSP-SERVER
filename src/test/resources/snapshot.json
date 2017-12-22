@@ -1,4 +1,14 @@
 {
+  "personal_survey_data":{
+  	"firstName":"Juan",
+  	"lastName":"Perez",
+  	"identificationType":"CI",
+  	"identificationNumber":"1234567",
+  	"gender":"M",
+  	"birthdate":"1980-12-09",
+  	"countryOfBirth":"PY",
+  	"phoneNumber":"021555555"
+  },
   "economic_survey_data": {
     "currency": "guaranies",
     "activityMain": "worker",
@@ -45,5 +55,6 @@
     "selfEsteem": "blue",
     "autonomyDecisions": "blue"
   },
-  "survey_id": 0
+  "survey_id": 0,
+  "snapshot_economic_id": 0
 }

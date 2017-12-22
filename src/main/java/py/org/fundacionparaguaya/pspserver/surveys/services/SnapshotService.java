@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by rodrigovillalba on 9/14/17.
  */
 public interface SnapshotService {
-
+	
     Snapshot addSurveySnapshot(NewSnapshot snapshot);
 
     List<Snapshot> find(Long surveyId, Long familiyId);
@@ -19,5 +19,9 @@ public interface SnapshotService {
     
     String filterCSV(Map<String, List<String>> indicators, Long organizationId, Long applicationId, Long countryId, Long cityId);
 
-    List<SnapshotIndicators> getSnapshotIndicators(Long surveyId, Long familiyId);
+    SnapshotIndicators getSnapshotIndicators(Long snapshotId);
+
+	List<SnapshotIndicators> getSnapshotIndicatorsByFamily(Long familyId);
+	
+	SnapshotIndicators getLastSnapshotIndicatorsByFamily(Long snapshotId);
 }

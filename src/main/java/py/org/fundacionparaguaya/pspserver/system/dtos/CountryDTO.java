@@ -10,11 +10,20 @@ public class CountryDTO implements Serializable {
 	
 	private String country;
 	
+	private String numericCode;
+	
+	private String alfa2Code;
+	
+	private String alfa3code;
+	
 	public CountryDTO(){}
 	
-	private CountryDTO(Long id, String country) {
+	private CountryDTO(Long id, String country, String numericCode, String alfa2Code, String alfa3Code) {
 		this.id = id;
 		this.country = country;
+		this.numericCode = numericCode;
+		this.alfa2Code = alfa2Code;
+		this.alfa3code = alfa3Code;
 	}
 
 	public CountryDTO(String country) {
@@ -23,6 +32,9 @@ public class CountryDTO implements Serializable {
 	public static class Builder{
 		private Long countryId;
 		private String country;
+		private String numericCode;
+	    private String alfa2Code;
+	    private String alfa3code;
 		
 		public Builder countryId (Long countryId){
 			this.countryId = countryId;
@@ -33,7 +45,7 @@ public class CountryDTO implements Serializable {
 			return this;
 		}
 		public CountryDTO build() {
-			return new CountryDTO(countryId, country);
+			return new CountryDTO(countryId, country, numericCode, alfa2Code, alfa3code);
 		}
 		
 	}
@@ -58,11 +70,38 @@ public class CountryDTO implements Serializable {
 		this.country = country;
 	}
 	
+	public String getNumericCode() {
+        return numericCode;
+    }
+
+    public void setNumericCode(String numericCode) {
+        this.numericCode = numericCode;
+    }
+
+    public String getAlfa2Code() {
+        return alfa2Code;
+    }
+
+    public void setAlfa2Code(String alfa2Code) {
+        this.alfa2Code = alfa2Code;
+    }
+
+    public String getAlfa3code() {
+        return alfa3code;
+    }
+
+    public void setAlfa3code(String alfa3code) {
+        this.alfa3code = alfa3code;
+    }
+	
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this)
 				.add("id", id)
 				.add("country", country)
+				.add("numericCode", numericCode)
+				.add("alfa2Code", alfa2Code)
+				.add("alfa3Code", alfa3code)
 				.toString();
 	}
 }

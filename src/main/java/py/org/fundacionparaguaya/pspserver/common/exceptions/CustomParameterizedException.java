@@ -1,13 +1,8 @@
 package py.org.fundacionparaguaya.pspserver.common.exceptions;
 
-import py.org.fundacionparaguaya.pspserver.common.constants.ErrorCodes;
-import py.org.fundacionparaguaya.pspserver.common.dtos.ErrorDTO;
 import py.org.fundacionparaguaya.pspserver.common.dtos.FieldErrorDTO;
-import py.org.fundacionparaguaya.pspserver.common.dtos.ParameterizedErrorDTO;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
 /**
  * Custom, parameterized exception, which can be translated on the client side.
  * For example:

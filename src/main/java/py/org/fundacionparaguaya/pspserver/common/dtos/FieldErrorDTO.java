@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FieldErrorDTO implements Serializable {

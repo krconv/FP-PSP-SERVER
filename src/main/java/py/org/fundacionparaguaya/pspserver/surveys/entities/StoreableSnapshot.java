@@ -6,6 +6,6 @@ import py.org.fundacionparaguaya.pspserver.surveys.dtos.SurveyData;
  * Created by rodrigovillalba on 10/23/17.
  */
 public interface StoreableSnapshot {
-    public SurveyData getAdditionalProperties();
+    SurveyData getAdditionalProperties();
 
 }
