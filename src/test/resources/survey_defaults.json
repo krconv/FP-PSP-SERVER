@@ -46,7 +46,8 @@
       "influenceInPublicSector",
       "awarenessOfNeeds",
       "selfEsteem",
-      "autonomyDecisions"
+      "autonomyDecisions",
+      "familyUbication"
     ],
     "properties": {
       "currency": {
@@ -349,6 +350,13 @@
           "es": "Que tanto consume terere"
         },
         "default": "red"
+      },
+      "familyUbication": {
+        "type": "string",
+        "title":{
+          "es": ""
+        },
+        "default": "red"
       }
     }
   },
@@ -373,6 +381,7 @@
       "educationPersonMostStudied",
       "educationLevelAttained",
       "housingSituation",
+      "familyUbication",      
       "otherUsefulInfo"
     ],
     "ui:group:indicators": [

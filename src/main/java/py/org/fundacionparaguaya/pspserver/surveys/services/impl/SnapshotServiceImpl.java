@@ -1,17 +1,23 @@
 package py.org.fundacionparaguaya.pspserver.surveys.services.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.CustomParameterizedException;
 import py.org.fundacionparaguaya.pspserver.families.entities.FamilyEntity;
+import py.org.fundacionparaguaya.pspserver.families.entities.specifications.FamilySpecifications;
 import py.org.fundacionparaguaya.pspserver.families.repositories.FamilyRepository;
 import py.org.fundacionparaguaya.pspserver.surveys.entities.SnapshotEconomicEntity;
 import py.org.fundacionparaguaya.pspserver.surveys.entities.SnapshotIndicatorEntity;
 import py.org.fundacionparaguaya.pspserver.surveys.entities.SurveyEntity;
+import py.org.fundacionparaguaya.pspserver.surveys.entities.specifications.SnapshotSpecifications;
+import py.org.fundacionparaguaya.pspserver.surveys.entities.specifications.SnapshotSpecifications.*;
 import py.org.fundacionparaguaya.pspserver.surveys.mapper.SnapshotEconomicMapper;
 import py.org.fundacionparaguaya.pspserver.surveys.mapper.SnapshotIndicatorMapper;
 import py.org.fundacionparaguaya.pspserver.surveys.repositories.SnapshotEconomicRepository;
+import py.org.fundacionparaguaya.pspserver.surveys.repositories.SnapshotIndicatorRepository;
 import py.org.fundacionparaguaya.pspserver.surveys.repositories.SurveyRepository;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotIndicatorPriorityService;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotService;
@@ -20,8 +26,17 @@ import py.org.fundacionparaguaya.pspserver.surveys.validation.*;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -55,7 +70,7 @@ public class SnapshotServiceImpl implements SnapshotService {
 
 
     public SnapshotServiceImpl(SnapshotEconomicRepository economicRepository, SnapshotEconomicMapper economicMapper, 
-            SurveyService surveyService, SurveyRepository surveyRepository, SnapshotIndicatorMapper indicatorMapper,
+            SurveyService surveyService, SurveyRepository surveyRepository, SnapshotIndicatorRepository indicatorRepository, SnapshotIndicatorMapper indicatorMapper,
             FamilyRepository familyRepository, SnapshotIndicatorPriorityService priorityService) {
         this.economicRepository = economicRepository;
         this.economicMapper = economicMapper;
@@ -98,6 +113,46 @@ public class SnapshotServiceImpl implements SnapshotService {
                 .collect(Collectors.toList());
     }
     
+    @Override
+    public List<Snapshot> filter(Map<String, List<String>> indicators, Long organizationId, Long applicationId, Long countryId, Long cityId) {
+        List<Long> familiesIds = familyRepository.findAll(Specifications
+                .where(FamilySpecifications.belongsToOrganization(organizationId))
+                .and(FamilySpecifications.belongsToApplication(applicationId))
+                .and(FamilySpecifications.inCountry(countryId))
+                .and(FamilySpecifications.inCity(cityId)))
+                .stream()
+                .map((f) -> f.getFamilyId())
+                .collect(Collectors.toList());
+        return economicRepository.findAll(Specifications
+                .where(SnapshotSpecifications.hasIndicators(indicators))
+                .and(SnapshotSpecifications.forFamilies(familiesIds)))
+                .stream()
+                .map(economicMapper::entityToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String filterCSV(Map<String, List<String>> indicators, Long organizationId, Long applicationId, Long countryId, Long cityId) {
+        List<FamilyEntity> families = familyRepository.findAll(Specifications
+                .where(FamilySpecifications.belongsToOrganization(organizationId))
+                .and(FamilySpecifications.belongsToApplication(applicationId))
+                .and(FamilySpecifications.inCountry(countryId))
+                .and(FamilySpecifications.inCity(cityId)))
+                .stream()
+                .collect(Collectors.toList());
+        List<SnapshotEconomicEntity> snapshots = economicRepository.findAll(Specifications
+                .where(SnapshotSpecifications.hasIndicators(indicators))
+                .and(SnapshotSpecifications.forFamilies(families.stream().map(f -> f.getFamilyId()).collect(Collectors.toList()))))
+                .stream()
+                .collect(Collectors.toList());
+        
+        String csv = SnapshotEconomicEntity.getCSVFields() + "\n";
+        for (SnapshotEconomicEntity snapshot : snapshots) {
+            csv += snapshot.toCSV(families.stream().filter(f -> f.getFamilyId() == snapshot.getFamilyId()).findFirst().get())[1] + "\n";
+        }
+        return csv;
+    }
+
     @Override
     public List<SnapshotIndicators> getSnapshotIndicators(Long surveyId, Long familiyId) {
         

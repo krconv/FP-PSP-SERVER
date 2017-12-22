@@ -17,7 +17,9 @@ import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotService;
 import py.org.fundacionparaguaya.pspserver.util.TestHelper;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -66,6 +68,25 @@ public class SnapshotControllerTest {
                         requestParameters(parameterWithName("survey_id").description("The survey id that this snapshot belongs to"))));
     }
 
+    @Test
+    public void shouldGetAllSnapshotsByFilter() throws Exception {
+        List<Snapshot> snapshots = snapshotList();
+
+        Map<String, List<String>> indicators = new HashMap<String, List<String>>();
+        indicators.put("properKitchen", Arrays.asList("red"));
+
+        when(service.filter(indicators, 1L, null, 1L, null)).thenReturn(snapshots);
+
+        this.mockMvc.perform(get("/api/v1/snapshots/filter")
+                .param("indicators", "{ \"properKitchen\": [\"red\"] }")
+                .param("organizationId", "1")
+                .param("countryId", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("snapshots-list",
+                        preprocessResponse(prettyPrint()),
+                        responseFields(snapshotsDescriptor)));
+    }
 
     @Test
     public void shouldPostToCreateSnapshot() throws Exception {

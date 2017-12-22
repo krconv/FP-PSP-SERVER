@@ -1,5 +1,7 @@
 package py.org.fundacionparaguaya.pspserver.web.rest;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +12,13 @@ import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotService;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.NewSnapshot;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.Snapshot;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.SnapshotIndicators;
-
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by rodrigovillalba on 10/5/17.
@@ -32,12 +37,49 @@ public class SnapshotController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @io.swagger.annotations.ApiOperation(value = "Retrieves all snapshots for a  survery", notes = "A `GET` request with a survey parameter will return a list of snapshots for the that survey.", response = List.class, tags = {})
     @io.swagger.annotations.ApiResponses(value = {
-            @io.swagger.annotations.ApiResponse(code = 200, message = "List of available surveys", response = Snapshot.class, responseContainer="List")
+           @io.swagger.annotations.ApiResponse(code = 200, message = "List of available surveys", response = Snapshot.class, responseContainer="List")
     })
     public ResponseEntity getSnapshots(@RequestParam("survey_id") Long surveyId,
                                        @RequestParam(value = "family_id", required = false) Long familiyId) {
         List<Snapshot> snapshots = snapshotService.find(surveyId, familiyId);
         return ResponseEntity.ok(snapshots);
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE, path="/filter")
+    @io.swagger.annotations.ApiOperation(value = "Retrieves a filtered set of snapshots", notes = "A `GET` request with filter parameters will return a list of snapshots matching that criteria.", response = List.class, tags = {})
+    @io.swagger.annotations.ApiResponses(value = {
+            @io.swagger.annotations.ApiResponse(code = 200, message = "Snapshots matching filter criteria.", response = Snapshot.class, responseContainer="List")
+    })
+    public ResponseEntity filterSnapshots(@RequestParam(value = "indicators", required = false) String indicators,
+                                          @RequestParam(value = "organizationId", required = false) Long organizationId,
+                                          @RequestParam(value = "applicationId", required = false) Long applicationId,
+                                          @RequestParam(value = "countryId", required = false) Long countryId,
+                                          @RequestParam(value = "cityId", required = false) Long cityId){
+        Map<String, List<String>> indicatorsMap = new HashMap<String, List<String>>();
+        if (indicators != null) {
+            indicatorsMap = new Gson().fromJson(indicators, new TypeToken<Map<String, List<String>>>(){}.getType());
+        }
+        List<Snapshot> snapshots = snapshotService.filter(indicatorsMap, organizationId, applicationId, countryId, cityId);
+
+        return ResponseEntity.ok(snapshots);
+    }
+
+    @GetMapping(produces = "text/csv", path="/filter/csv")
+    @io.swagger.annotations.ApiOperation(value = "Retrieves a filtered set of snapshots", notes = "A `GET` request with filter parameters will return a list of snapshots matching that criteria.", response = List.class, tags = {})
+    @io.swagger.annotations.ApiResponses(value = {
+            @io.swagger.annotations.ApiResponse(code = 200, message = "Snapshots matching filter criteria.", response = Snapshot.class)
+    })
+    public String filterSnapshotsCSV(@RequestParam(value = "indicators", required = false) String indicators,
+                                     @RequestParam(value = "organizationId", required = false) Long organizationId,
+                                     @RequestParam(value = "applicationId", required = false) Long applicationId,
+                                     @RequestParam(value = "countryId", required = false) Long countryId,
+                                     @RequestParam(value = "cityId", required = false) Long cityId) {
+        Map<String, List<String>> indicatorsMap = new HashMap<String, List<String>>();
+        if (indicators != null) {
+            indicatorsMap = new Gson().fromJson(indicators, new TypeToken<Map<String, List<String>>>(){}.getType());
+        }
+
+        return snapshotService.filterCSV(indicatorsMap, organizationId, applicationId, countryId, cityId);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)

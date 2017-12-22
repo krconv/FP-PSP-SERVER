@@ -337,5 +337,14 @@ public class SnapshotIndicatorEntity implements StoreableSnapshot {
         return this;
     }
 
-
+    public static String getCSVFields() {
+        return "Drinking Water Access,Nearby Health Post,Garbage Disposal,Safe House,Safe Bathroom,Electricity Access,Separate Bed,Separate Bedrooms,Proper Kitchen,Phone,Security,Read and Write,Middle Education,Social Capital,Information Access,Influence in Public Sector,Awareness of Needs,Self Esteem,Autonomy Decisions";
+    }
+	public String[] toCSV() {
+		return new String[] {
+            getCSVFields(),
+            drinkingWaterAccess + "," + nearbyHealthPost + "," + garbageDisposal + "," + safeHouse + "," + safeBathroom + "," + electricityAccess + "," + separateBed + "," + separateBedrooms + "," + properKitchen + "," + phone + "," + security + "," + readAndWrite + "," + middleEducation + "," + socialCapital + "," 
+                    + informationAccess + "," + influenceInPublicSector + "," + awarenessOfNeeds + "," + selfEsteem + "," + autonomyDecisions
+        };
+	}
 }
