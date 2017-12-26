@@ -11,9 +11,6 @@ public class Snapshot {
     @JsonProperty("survey_id")
     private Long surveyId = null;
 
-    @JsonProperty("family_id")
-    private Long familyId = null;
-
     @JsonProperty("snapshot_economic_id")
     private Long snapshotEconomicId = null;
     
@@ -168,11 +165,6 @@ public class Snapshot {
 
     public Snapshot snapshotEconomicId(Long id) {
         this.snapshotEconomicId = id;
-        return this;
-    }
-
-    public Snapshot familyId(Long familyId) {
-        this.familyId = familyId;
         return this;
     }
     

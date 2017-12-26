@@ -34,7 +34,6 @@ public class SnapshotEconomicMapper implements BaseMapper<SnapshotEconomicEntity
     @Override
     public Snapshot entityToDto(SnapshotEconomicEntity entity) {
         return new Snapshot().snapshotEconomicId(entity.getId())
-                .familyId(entity.getFamily() != null ? entity.getFamily().getFamilyId() : 0)
                 .surveyId(entity.getSurveyDefinition().getId())
                 .createdAt(entity.getCreatedAtAsISOString())
                 .economicSurveyData(getAllProperties(entity, propertyAttributeSupport.getPropertyAttributesByGroup(StopLightGroup.ECONOMIC)))
