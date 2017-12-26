@@ -376,7 +376,7 @@ public class SnapshotEconomicEntity implements StoreableSnapshot {
 
     }
 
-    public String[] toCSV(FamilyEntity family) {
+    public String[] toCSV() {
         return new String[] {
             getCSVFields(),
             family.toCSV()[1] + "," + areaOfResidence + "," + employmentStatusPrimary + "," + employmentStatusSecondary + "," + activityMain + "," + activitySecondary + "," + householdMonthlyIncome + "," + salaryIncome + "," + benefitIncome + "," + pensionIncome + "," + savingsIncome + "," + otherIncome + "," + householdMonthlyOutgoing + "," + netSuplus + "," + educationClientLevel 

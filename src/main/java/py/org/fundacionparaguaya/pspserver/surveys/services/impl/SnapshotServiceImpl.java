@@ -8,25 +8,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-<<<<<<< HEAD
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
-=======
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
->>>>>>> f6df757052788bcb27ec4528a86aee797e87f5d6
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import py.org.fundacionparaguaya.pspserver.common.exceptions.CustomParameterizedException;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.UnknownResourceException;
 import py.org.fundacionparaguaya.pspserver.families.entities.FamilyEntity;
-<<<<<<< HEAD
 import py.org.fundacionparaguaya.pspserver.families.entities.specifications.FamilySpecifications;
-=======
 import py.org.fundacionparaguaya.pspserver.families.entities.PersonEntity;
 import py.org.fundacionparaguaya.pspserver.families.mapper.PersonMapper;
->>>>>>> f6df757052788bcb27ec4528a86aee797e87f5d6
 import py.org.fundacionparaguaya.pspserver.families.repositories.FamilyRepository;
 import py.org.fundacionparaguaya.pspserver.families.services.FamilyService;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.NewSnapshot;
@@ -37,41 +30,19 @@ import py.org.fundacionparaguaya.pspserver.surveys.dtos.SurveyData;
 import py.org.fundacionparaguaya.pspserver.surveys.entities.SnapshotEconomicEntity;
 import py.org.fundacionparaguaya.pspserver.surveys.entities.SnapshotIndicatorEntity;
 import py.org.fundacionparaguaya.pspserver.surveys.entities.SurveyEntity;
-<<<<<<< HEAD
 import py.org.fundacionparaguaya.pspserver.surveys.entities.specifications.SnapshotSpecifications;
-import py.org.fundacionparaguaya.pspserver.surveys.entities.specifications.SnapshotSpecifications.*;
-=======
 import py.org.fundacionparaguaya.pspserver.surveys.enums.SurveyStoplightEnum;
->>>>>>> f6df757052788bcb27ec4528a86aee797e87f5d6
 import py.org.fundacionparaguaya.pspserver.surveys.mapper.SnapshotEconomicMapper;
 import py.org.fundacionparaguaya.pspserver.surveys.mapper.SnapshotIndicatorMapper;
 import py.org.fundacionparaguaya.pspserver.surveys.repositories.SnapshotEconomicRepository;
-import py.org.fundacionparaguaya.pspserver.surveys.repositories.SnapshotIndicatorRepository;
 import py.org.fundacionparaguaya.pspserver.surveys.repositories.SurveyRepository;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotIndicatorPriorityService;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotService;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SurveyService;
-<<<<<<< HEAD
-import py.org.fundacionparaguaya.pspserver.surveys.validation.*;
-import py.org.fundacionparaguaya.pspserver.surveys.dtos.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.SingularAttribute;
-import javax.persistence.metamodel.StaticMetamodel;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-=======
 import py.org.fundacionparaguaya.pspserver.surveys.validation.ValidationResults;
->>>>>>> f6df757052788bcb27ec4528a86aee797e87f5d6
 
 /**
  * Created by rodrigovillalba on 9/14/17.
@@ -103,16 +74,10 @@ public class SnapshotServiceImpl implements SnapshotService {
 
     private static final String INDICATOR_VALUE = "value";
 
-<<<<<<< HEAD
-    public SnapshotServiceImpl(SnapshotEconomicRepository economicRepository, SnapshotEconomicMapper economicMapper, 
-            SurveyService surveyService, SurveyRepository surveyRepository, SnapshotIndicatorRepository indicatorRepository, SnapshotIndicatorMapper indicatorMapper,
-            FamilyRepository familyRepository, SnapshotIndicatorPriorityService priorityService) {
-=======
     public SnapshotServiceImpl(SnapshotEconomicRepository economicRepository, SnapshotEconomicMapper economicMapper,
             SurveyService surveyService, SurveyRepository surveyRepository, SnapshotIndicatorMapper indicatorMapper,
             SnapshotIndicatorPriorityService priorityService, PersonMapper personMapper,
             FamilyRepository familyRepository, FamilyService familyService) {
->>>>>>> f6df757052788bcb27ec4528a86aee797e87f5d6
         this.economicRepository = economicRepository;
         this.economicMapper = economicMapper;
         this.surveyService = surveyService;
@@ -170,7 +135,6 @@ public class SnapshotServiceImpl implements SnapshotService {
     }
 
     @Override
-<<<<<<< HEAD
     public List<Snapshot> filter(Map<String, List<String>> indicators, Long organizationId, Long applicationId, Long countryId, Long cityId) {
         List<Long> familiesIds = familyRepository.findAll(Specifications
                 .where(FamilySpecifications.belongsToOrganization(organizationId))
@@ -205,14 +169,12 @@ public class SnapshotServiceImpl implements SnapshotService {
         
         String csv = SnapshotEconomicEntity.getCSVFields() + "\n";
         for (SnapshotEconomicEntity snapshot : snapshots) {
-            csv += snapshot.toCSV(families.stream().filter(f -> f.getFamilyId() == snapshot.getFamilyId()).findFirst().get())[1] + "\n";
+            csv += snapshot.toCSV()[1] + "\n";
         }
         return csv;
     }
 
     @Override
-    public List<SnapshotIndicators> getSnapshotIndicators(Long surveyId, Long familiyId) {
-=======
     public SnapshotIndicators getSnapshotIndicators(Long snapshotId) {
 
         SnapshotIndicators toRet = new SnapshotIndicators();
@@ -251,7 +213,6 @@ public class SnapshotServiceImpl implements SnapshotService {
         toRet.setSnapshotIndicatorId(originalSnapshot.getSnapshotIndicator().getId());
         toRet.setSnapshotEconomicId(originalSnapshot.getId());
         toRet.setSurveyId(originalSnapshot.getSurveyDefinition().getId());
->>>>>>> f6df757052788bcb27ec4528a86aee797e87f5d6
         
         //set family for information purpose
         Long familyId = originalSnapshot.getFamily().getFamilyId();

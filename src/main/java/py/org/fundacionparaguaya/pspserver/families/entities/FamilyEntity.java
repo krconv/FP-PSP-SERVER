@@ -189,7 +189,7 @@ public class FamilyEntity extends BaseEntity {
 		return new String[] {
 			getCSVFields(),
 			name + "," + country.getCountry() + "," + city.getCity() + "," + locationType + "," 
-					+ locationPositionGps + "," + person.getName() + "," + application.getName() 
+					+ locationPositionGps + "," + person.getFirstName() + " " + person.getLastName() + "," + application.getName() 
 					+ "," + organization.getName()
 		};
 	}

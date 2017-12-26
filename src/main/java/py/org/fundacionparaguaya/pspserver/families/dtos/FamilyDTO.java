@@ -198,12 +198,12 @@ public class FamilyDTO {
 				.add("name", name)
 				.add("code", code)
 				.add("country", country)
-				.add("city", city.toString())
+				.add("city", city)
 				.add("locationType", locationType)
 				.add("locationPositionGps", locationPositionGps)
-				.add("person", person.toString())
-				.add("application", application.toString())
-				.add("organization", organization.toString())
+				.add("person", person)
+				.add("application", application)
+				.add("organization", organization)
 				.toString();
 	}
 }

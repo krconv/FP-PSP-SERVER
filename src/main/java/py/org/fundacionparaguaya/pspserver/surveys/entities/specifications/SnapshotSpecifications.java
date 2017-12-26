@@ -1,7 +1,6 @@
 package py.org.fundacionparaguaya.pspserver.surveys.entities.specifications;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -44,7 +43,7 @@ public final class SnapshotSpecifications {
       public Predicate toPredicate(Root<SnapshotEconomicEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         List<Predicate> predicates = new ArrayList<Predicate>();
         for (Long familyId : familyIds) {
-          predicates.add(cb.equal(root.get("familyId"), familyId));
+          predicates.add(cb.equal(root.join("family").get("familyId"), familyId));
         }
         return cb.or(predicates.toArray(new Predicate[predicates.size()]));
       }
