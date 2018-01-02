@@ -5,7 +5,6 @@ import javax.validation.constraints.NotNull;
 import com.google.common.base.MoreObjects;
 
 import py.org.fundacionparaguaya.pspserver.families.constants.Gender;
-import py.org.fundacionparaguaya.pspserver.network.dtos.OrganizationDTO.Builder;
 import py.org.fundacionparaguaya.pspserver.system.dtos.CityDTO;
 import py.org.fundacionparaguaya.pspserver.system.dtos.CountryDTO;
 

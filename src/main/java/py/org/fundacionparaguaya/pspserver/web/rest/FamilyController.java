@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import py.org.fundacionparaguaya.pspserver.families.dtos.FamilyDTO;
+import py.org.fundacionparaguaya.pspserver.families.dtos.FamilyFilterDTO;
 import py.org.fundacionparaguaya.pspserver.families.dtos.FamilyMapDTO;
 import py.org.fundacionparaguaya.pspserver.families.services.FamilyMapService;
 import py.org.fundacionparaguaya.pspserver.families.services.FamilyService;
+import py.org.fundacionparaguaya.pspserver.security.dtos.UserDetailsDTO;
 
 
 @RestController
@@ -79,9 +82,17 @@ public class FamilyController {
 			@RequestParam(value = "organization_id", required = false) Long organizationId,
 			@RequestParam(value = "country_id", required = false) Long countryId,
 			@RequestParam(value = "city_id", required = false) Long cityId,
-			@RequestParam(value = "free_text", required = false) String freeText) {
-		List<FamilyDTO> families = familyService.getFamiliesByFilter(organizationId, countryId, cityId, freeText);
+			@RequestParam(value = "free_text", required = false) String name,
+			@AuthenticationPrincipal UserDetailsDTO details) {
+		FamilyFilterDTO filter = new FamilyFilterDTO(organizationId, countryId, cityId, name);
+		List<FamilyDTO> families = familyService.listFamilies(filter, details);
 		return ResponseEntity.ok(families);
 	}
+	
+	@GetMapping("/counter")
+    public ResponseEntity<Long> getFamiliesByFilter(@AuthenticationPrincipal UserDetailsDTO details) {
+        Long count = familyService.countFamiliesByDetails(details);
+        return ResponseEntity.ok(count);
+    }
 
 }

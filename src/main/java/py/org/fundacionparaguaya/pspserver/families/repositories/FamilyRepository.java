@@ -1,16 +1,16 @@
 package py.org.fundacionparaguaya.pspserver.families.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
 import py.org.fundacionparaguaya.pspserver.families.entities.FamilyEntity;
 
-import java.util.Optional;
-
-public interface FamilyRepository extends JpaRepository<FamilyEntity, Long>, JpaSpecificationExecutor<FamilyEntity> {
+public interface FamilyRepository extends JpaRepository<FamilyEntity, Long>, JpaSpecificationExecutor<FamilyEntity>{
 
 	Optional<FamilyEntity> findByCode(String code);
 

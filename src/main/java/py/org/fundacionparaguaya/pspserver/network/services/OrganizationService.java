@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import py.org.fundacionparaguaya.pspserver.network.dtos.OrganizationDTO;
+import py.org.fundacionparaguaya.pspserver.security.dtos.UserDetailsDTO;
 
 public interface OrganizationService{
 
@@ -19,6 +20,8 @@ public interface OrganizationService{
 	
 	void deleteOrganization(Long organizationId);
 
-	Page<OrganizationDTO> getAllOrganizations(PageRequest pageRequest);	
+	//Page<OrganizationDTO> getAllOrganizations(PageRequest pageRequest);
+
+	Page<OrganizationDTO> listOrganizations(PageRequest pageRequest, UserDetailsDTO userDetails);	
 
 }

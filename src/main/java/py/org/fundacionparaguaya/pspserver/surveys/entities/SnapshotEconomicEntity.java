@@ -370,17 +370,4 @@ public class SnapshotEconomicEntity implements StoreableSnapshot {
         }
         return null;
     }
-
-    public static String getCSVFields() {
-        return FamilyEntity.getCSVFields() + ",Currency,Area of Residence,Employment Status (Primary),Employment Status (Secondary),Activity (Primary),Activity (Secondary),Household Monthly Income,Salary Income,Benefit Income,Pension Income,Savings Income,Other Income,Household Monthly Outgoing,Net Surplus,Education Client Level,Person Most Studied,Education Level Attained,Housing Situation,Family Ubication," + SnapshotIndicatorEntity.getCSVFields();
-
-    }
-
-    public String[] toCSV() {
-        return new String[] {
-            getCSVFields(),
-            family.toCSV()[1] + "," + areaOfResidence + "," + employmentStatusPrimary + "," + employmentStatusSecondary + "," + activityMain + "," + activitySecondary + "," + householdMonthlyIncome + "," + salaryIncome + "," + benefitIncome + "," + pensionIncome + "," + savingsIncome + "," + otherIncome + "," + householdMonthlyOutgoing + "," + netSuplus + "," + educationClientLevel 
-                    + "," + educationPersonMostStudied + "," + educationLevelAttained + "," + housingSituation + "," + familyUbication + "," + snapshotIndicator.toCSV()[1]
-        };
-    }
 }

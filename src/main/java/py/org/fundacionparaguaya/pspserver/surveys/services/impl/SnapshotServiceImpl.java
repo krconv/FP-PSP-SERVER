@@ -4,21 +4,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.jpa.domain.Specifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import py.org.fundacionparaguaya.pspserver.common.exceptions.CustomParameterizedException;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.UnknownResourceException;
 import py.org.fundacionparaguaya.pspserver.families.entities.FamilyEntity;
-import py.org.fundacionparaguaya.pspserver.families.entities.specifications.FamilySpecifications;
 import py.org.fundacionparaguaya.pspserver.families.entities.PersonEntity;
+import py.org.fundacionparaguaya.pspserver.families.entities.specifications.FamilySpecifications;
 import py.org.fundacionparaguaya.pspserver.families.mapper.PersonMapper;
 import py.org.fundacionparaguaya.pspserver.families.repositories.FamilyRepository;
 import py.org.fundacionparaguaya.pspserver.families.services.FamilyService;
@@ -39,9 +40,6 @@ import py.org.fundacionparaguaya.pspserver.surveys.repositories.SurveyRepository
 import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotIndicatorPriorityService;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotService;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SurveyService;
-
-import java.util.Map;
-
 import py.org.fundacionparaguaya.pspserver.surveys.validation.ValidationResults;
 
 /**
@@ -136,7 +134,23 @@ public class SnapshotServiceImpl implements SnapshotService {
 
     @Override
     public List<Snapshot> filter(Map<String, List<String>> indicators, Long organizationId, Long applicationId, Long countryId, Long cityId) {
-        List<Long> familiesIds = familyRepository.findAll(Specifications
+        List<Long> familiesIds = filterFamilies(organizationId, applicationId, countryId, cityId);
+
+        return economicRepository.findAll(Specifications
+                .where(SnapshotSpecifications.hasIndicators(indicators))
+                .and(SnapshotSpecifications.forFamilies(familiesIds)))
+                .stream()
+                .map(economicMapper::entityToDto)
+                .collect(Collectors.toList());
+
+    }
+
+    private List<Long> filterFamilies(Long organizationId, Long applicationId, Long countryId, Long cityId) {
+        if (organizationId == null && applicationId == null && countryId == null && cityId == null) {
+            return null;
+        }
+
+        return familyRepository.findAll(Specifications
                 .where(FamilySpecifications.belongsToOrganization(organizationId))
                 .and(FamilySpecifications.belongsToApplication(applicationId))
                 .and(FamilySpecifications.inCountry(countryId))
@@ -144,34 +158,6 @@ public class SnapshotServiceImpl implements SnapshotService {
                 .stream()
                 .map((f) -> f.getFamilyId())
                 .collect(Collectors.toList());
-        return economicRepository.findAll(Specifications
-                .where(SnapshotSpecifications.hasIndicators(indicators))
-                .and(SnapshotSpecifications.forFamilies(familiesIds)))
-                .stream()
-                .map(economicMapper::entityToDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public String filterCSV(Map<String, List<String>> indicators, Long organizationId, Long applicationId, Long countryId, Long cityId) {
-        List<FamilyEntity> families = familyRepository.findAll(Specifications
-                .where(FamilySpecifications.belongsToOrganization(organizationId))
-                .and(FamilySpecifications.belongsToApplication(applicationId))
-                .and(FamilySpecifications.inCountry(countryId))
-                .and(FamilySpecifications.inCity(cityId)))
-                .stream()
-                .collect(Collectors.toList());
-        List<SnapshotEconomicEntity> snapshots = economicRepository.findAll(Specifications
-                .where(SnapshotSpecifications.hasIndicators(indicators))
-                .and(SnapshotSpecifications.forFamilies(families.stream().map(f -> f.getFamilyId()).collect(Collectors.toList()))))
-                .stream()
-                .collect(Collectors.toList());
-        
-        String csv = SnapshotEconomicEntity.getCSVFields() + "\n";
-        for (SnapshotEconomicEntity snapshot : snapshots) {
-            csv += snapshot.toCSV()[1] + "\n";
-        }
-        return csv;
     }
 
     @Override

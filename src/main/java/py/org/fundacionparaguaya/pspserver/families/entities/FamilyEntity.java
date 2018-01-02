@@ -180,17 +180,4 @@ public class FamilyEntity extends BaseEntity {
 				.add("organization", organization.toString())
 				.toString();
 	}
-
-	public static String getCSVFields() {
-		return "Family Name,Country,City,Location Type,Location,Person,Application,Organization";
-
-	}
-	public String[] toCSV() {
-		return new String[] {
-			getCSVFields(),
-			name + "," + country.getCountry() + "," + city.getCity() + "," + locationType + "," 
-					+ locationPositionGps + "," + person.getFirstName() + " " + person.getLastName() + "," + application.getName() 
-					+ "," + organization.getName()
-		};
-	}
 }

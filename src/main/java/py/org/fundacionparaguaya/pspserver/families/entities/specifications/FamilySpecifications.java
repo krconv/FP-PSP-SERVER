@@ -29,8 +29,8 @@ public final class FamilySpecifications {
     return new Specification<FamilyEntity>() {
       public Predicate toPredicate(Root<FamilyEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         if (id == null) return cb.isNotNull(root.get("familyId"));
-        Join<Object, Object> countries = root.join(attribute);
-        return cb.equal(countries.get("id"), id);
+        Join<Object, Object> secondary = root.join(attribute);
+        return cb.equal(secondary.get("id"), id);
       }
     };
   }

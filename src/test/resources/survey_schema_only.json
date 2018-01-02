@@ -10,6 +10,8 @@
   	"birthdate",
   	"countryOfBirth",
   	"gender",
+  	"familyCountry",
+  	"familyCity",
     "familyUbication",
     "currency",
     "areaOfResidence",

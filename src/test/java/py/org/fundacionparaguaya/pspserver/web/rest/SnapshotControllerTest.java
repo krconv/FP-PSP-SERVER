@@ -56,20 +56,6 @@ public class SnapshotControllerTest {
     private SnapshotService service;
 
     @Test
-    public void shouldGetAllSnapshotsBySurvey() throws Exception {
-        List<Snapshot> snapshots = snapshotList();
-        when(service.find(eq(SURVEY_ID), anyLong())).thenReturn(snapshots);
-
-        this.mockMvc.perform(get("/api/v1/snapshots").param("survey_id", SURVEY_ID.toString()))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("snapshots-list",
-                        preprocessResponse(prettyPrint()),
-                        responseFields(snapshotsDescriptor),
-                        requestParameters(parameterWithName("survey_id").description("The survey id that this snapshot belongs to"))));
-    }
-
-    @Test
     public void shouldGetAllSnapshotsByFilter() throws Exception {
         List<Snapshot> snapshots = snapshotList();
 
@@ -88,6 +74,21 @@ public class SnapshotControllerTest {
                         preprocessResponse(prettyPrint()),
                         responseFields(snapshotsDescriptor)));
     }
+    
+    @Test
+    public void shouldGetAllSnapshotsBySurvey() throws Exception {
+        List<Snapshot> snapshots = snapshotList();
+        when(service.find(eq(SURVEY_ID), anyLong())).thenReturn(snapshots);
+
+        this.mockMvc.perform(get("/api/v1/snapshots").param("survey_id", SURVEY_ID.toString()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("snapshots-list",
+                        preprocessResponse(prettyPrint()),
+                        responseFields(snapshotsDescriptor),
+                        requestParameters(parameterWithName("survey_id").description("The survey id that this snapshot belongs to"))));
+    }
+
 
     @Test
     public void shouldPostToCreateSnapshot() throws Exception {

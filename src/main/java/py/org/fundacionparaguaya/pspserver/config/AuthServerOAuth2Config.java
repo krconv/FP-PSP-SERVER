@@ -83,4 +83,16 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
     public TokenEnhancer tokenEnhancer() {
         return new CustomTokenEnhancer();
     }
+
+    public static void main(String[] args) {
+
+        // Use this to generate passwords
+        String password = "";
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        String hashedPassword = passwordEncoder.encode(password);
+        System.out.println(hashedPassword);
+
+
+    }
 }

@@ -58,6 +58,12 @@ INSERT INTO data_collect.snapshots_properties_attributes(
 INSERT INTO data_collect.snapshots_properties_attributes(
 	property_system_name, property_schema_name, stoplight_type, lang, title, stoplight_group)
 	VALUES ('familyUbication', 'familyUbication', 'MANDATORY', 'es', 'Seleccione la ubicación geográfica de la familia', 'ECONOMIC');
+INSERT INTO data_collect.snapshots_properties_attributes(
+	property_system_name, property_schema_name, stoplight_type, lang, title, stoplight_group)
+	VALUES ('familyCountry', 'familyCountry', 'MANDATORY', 'es', 'País en el que recide la familia', 'ECONOMIC');
+INSERT INTO data_collect.snapshots_properties_attributes(
+	property_system_name, property_schema_name, stoplight_type, lang, title, stoplight_group)
+	VALUES ('familyCity', 'familyCity', 'MANDATORY', 'es', 'Ciudad en la que recide la familia', 'ECONOMIC');
 
 
 -- indicator required and recommended survey properties
@@ -130,3 +136,7 @@ INSERT INTO data_collect.snapshots_properties_attributes(
 INSERT INTO data_collect.snapshots_properties_attributes(
 	property_system_name, property_schema_name, stoplight_type, lang, title, stoplight_group)
 	VALUES ('autonomyDecisions', 'autonomyDecisions', 'MANDATORY', 'es', 'Puede tomar decisiones de forma autónoma?', 'INDICATOR');
+
+
+
+

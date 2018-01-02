@@ -155,19 +155,20 @@ public class Snapshot {
         		com.google.common.base.Objects.equal(this.snapshotEconomicId, that.snapshotEconomicId) &&
         		com.google.common.base.Objects.equal(this.personalSurveyData, that.personalSurveyData) &&
                 com.google.common.base.Objects.equal(this.economicSurveyData, that.economicSurveyData) &&
+                com.google.common.base.Objects.equal(this.createdAt, that.createdAt) &&
                 com.google.common.base.Objects.equal(this.indicatorSurveyData, that.indicatorSurveyData);
     }
 
     @Override
     public int hashCode() {
-        return com.google.common.base.Objects.hashCode(surveyId, snapshotEconomicId, personalSurveyData, economicSurveyData, indicatorSurveyData);
+        return com.google.common.base.Objects.hashCode(surveyId, snapshotEconomicId, personalSurveyData, economicSurveyData, indicatorSurveyData, createdAt);
     }
 
     public Snapshot snapshotEconomicId(Long id) {
         this.snapshotEconomicId = id;
         return this;
     }
-    
+
     public Snapshot surveyId(Long surveyId) {
         this.surveyId = surveyId;
         return this;

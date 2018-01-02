@@ -33,15 +33,13 @@ public class SnapshotEconomicMapper implements BaseMapper<SnapshotEconomicEntity
 
     @Override
     public Snapshot entityToDto(SnapshotEconomicEntity entity) {
-        return new Snapshot().snapshotEconomicId(entity.getId())
-                .surveyId(entity.getSurveyDefinition().getId())
+        return new Snapshot().snapshotEconomicId(entity.getId()).surveyId(entity.getSurveyDefinition().getId())
                 .createdAt(entity.getCreatedAtAsISOString())
-                .economicSurveyData(getAllProperties(entity, propertyAttributeSupport.getPropertyAttributesByGroup(StopLightGroup.ECONOMIC)))
-                .indicatorSurveyData(
-                        getAllProperties(
-                                Optional.ofNullable(entity.getSnapshotIndicator()).orElse(new SnapshotIndicatorEntity()),
-                                propertyAttributeSupport.getPropertyAttributesByGroup(StopLightGroup.INDICATOR))
-                );
+                .economicSurveyData(getAllProperties(entity,
+                        propertyAttributeSupport.getPropertyAttributesByGroup(StopLightGroup.ECONOMIC)))
+                .indicatorSurveyData(getAllProperties(
+                        Optional.ofNullable(entity.getSnapshotIndicator()).orElse(new SnapshotIndicatorEntity()),
+                        propertyAttributeSupport.getPropertyAttributesByGroup(StopLightGroup.INDICATOR)));
     }
 
     @Override
@@ -49,31 +47,34 @@ public class SnapshotEconomicMapper implements BaseMapper<SnapshotEconomicEntity
         return null;
     }
 
-
     public SnapshotIndicatorEntity newSnapshotToIndicatorEntity(NewSnapshot snapshot) {
+
         return new SnapshotIndicatorEntity()
-                .staticProperties(snapshot.getMappedIndicatorSurveyData(propertyAttributeSupport.staticIndicator(), propertyAttributeSupport::propertySchemaToSystemName))
+                .staticProperties(snapshot.getMappedIndicatorSurveyData(propertyAttributeSupport.staticIndicator(),
+                        propertyAttributeSupport::propertySchemaToSystemName))
                 .additionalProperties(snapshot.getIndicatorSurveyData(propertyAttributeSupport.additional()));
+
     }
 
     public SnapshotEconomicEntity newSnapshotToEconomicEntity(NewSnapshot snapshot, SnapshotIndicatorEntity indicator) {
-        return new SnapshotEconomicEntity()
-                .surveyDefinition(new SurveyEntity(snapshot.getSurveyId()))
+        return new SnapshotEconomicEntity().surveyDefinition(new SurveyEntity(snapshot.getSurveyId()))
                 .surveyIndicator(indicator)
-                .staticProperties(snapshot.getMappedEconomicSurveyData(propertyAttributeSupport.staticEconomic(), propertyAttributeSupport::propertySchemaToSystemName))
+                .staticProperties(snapshot.getMappedEconomicSurveyData(propertyAttributeSupport.staticEconomic(),
+                        propertyAttributeSupport::propertySchemaToSystemName))
                 .additionalProperties(snapshot.getEconomicSurveyData(propertyAttributeSupport.additional()));
     }
 
     public SurveyData getAllProperties(StoreableSnapshot bean, List<PropertyAttributeEntity> attributes) {
-        SurveyData additionalData = Optional.ofNullable(bean.getAdditionalProperties()).orElseGet(SurveyData::new);
-        SurveyData data = new SurveyData(additionalData);
-        attributes.stream()
-                .forEach(makeSurveyDataWriter(bean, data));
+        SurveyData data = new SurveyData();
+        attributes.stream().forEach(makeSurveyDataWriter(bean, data));
+        bean.getAdditionalProperties().entrySet().stream().forEach(a -> data.put(a.getKey(), a.getValue()));
         return data;
     }
 
-    // TODO rillalba. Everything related to reflection ideally should be only in one place.
-    // Please check other places where we use PropertyUtils and try to put reflection responsabilities
+    // TODO rillalba. Everything related to reflection ideally should be only in
+    // one place.
+    // Please check other places where we use PropertyUtils and try to put
+    // reflection responsabilities
     // in one single class.
     private Consumer<PropertyAttributeEntity> makeSurveyDataWriter(StoreableSnapshot bean, SurveyData data) {
         checkNotNull(bean);
@@ -81,10 +82,14 @@ public class SnapshotEconomicMapper implements BaseMapper<SnapshotEconomicEntity
         return attr -> {
             Object propertyValue = null;
             try {
+
                 propertyValue = PropertyUtils.getProperty(bean, attr.getPropertySystemName());
                 data.put(attr.getPropertySchemaName(), propertyValue);
+
             } catch (Exception e) {
-                throw new RuntimeException("Could not get property '" + attr.getPropertySystemName() + "' from bean: " + bean.toString(), e);
+                throw new RuntimeException(
+                        "Could not get property '" + attr.getPropertySystemName() + "' from bean: " + bean.toString(),
+                        e);
             }
         };
     }

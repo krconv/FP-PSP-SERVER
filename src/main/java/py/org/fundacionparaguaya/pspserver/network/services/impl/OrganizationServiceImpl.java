@@ -1,6 +1,8 @@
 package py.org.fundacionparaguaya.pspserver.network.services.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.springframework.data.jpa.domain.Specifications.where;
+import static py.org.fundacionparaguaya.pspserver.network.specifications.OrganizationSpecification.byFilter;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,11 +16,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import py.org.fundacionparaguaya.pspserver.common.exceptions.UnknownResourceException;
+import py.org.fundacionparaguaya.pspserver.network.dtos.ApplicationDTO;
 import py.org.fundacionparaguaya.pspserver.network.dtos.OrganizationDTO;
 import py.org.fundacionparaguaya.pspserver.network.entities.OrganizationEntity;
 import py.org.fundacionparaguaya.pspserver.network.mapper.OrganizationMapper;
 import py.org.fundacionparaguaya.pspserver.network.repositories.OrganizationRepository;
 import py.org.fundacionparaguaya.pspserver.network.services.OrganizationService;
+import py.org.fundacionparaguaya.pspserver.security.dtos.UserDetailsDTO;
 
 
 @Service
@@ -86,8 +90,15 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
-	public Page<OrganizationDTO> getAllOrganizations(PageRequest pageRequest) {		
-		Page<OrganizationEntity> pageResponse = organizationRepository.findAll(pageRequest);
+	public Page<OrganizationDTO> listOrganizations(PageRequest pageRequest, UserDetailsDTO userDetails) {
+		Long applicationId = Optional.ofNullable(userDetails.getApplication())
+				.orElse(new ApplicationDTO()).getId();
+		
+		Long organizationId = Optional.ofNullable(userDetails.getOrganization())
+				.orElse(new OrganizationDTO()).getId();
+		
+        Page<OrganizationEntity> pageResponse = organizationRepository
+                .findAll(where(byFilter(applicationId, organizationId)), pageRequest);
 		
 		if (pageResponse != null) {
 			return pageResponse.map(new Converter<OrganizationEntity, OrganizationDTO>() {

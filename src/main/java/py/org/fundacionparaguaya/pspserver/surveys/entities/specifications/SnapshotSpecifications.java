@@ -16,7 +16,15 @@ public final class SnapshotSpecifications {
   public static Specification<SnapshotEconomicEntity> hasIndicator(String indicator, List<String> values) {
     return new Specification<SnapshotEconomicEntity>() {
       public Predicate toPredicate(Root<SnapshotEconomicEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        if (indicator == null || indicator.length() == 0) {
+          return cb.isNotNull(root.get("id")); // any
+        }
+
         Join<Object, Object> snapshots = root.join("snapshotIndicator");
+        if (values == null || values.isEmpty()) {
+          return cb.isNotNull(snapshots.get(indicator)); // any value
+        }
+
         List<Predicate> predicates = new ArrayList<Predicate>();
         for (String color : values) {
           predicates.add(cb.equal(snapshots.get(indicator), color));
@@ -29,6 +37,10 @@ public final class SnapshotSpecifications {
   public static Specification<SnapshotEconomicEntity> hasIndicators(Map<String, List<String>> indicators) {
     return new Specification<SnapshotEconomicEntity>() {
       public Predicate toPredicate(Root<SnapshotEconomicEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        if (indicators == null || indicators.isEmpty()) {
+          return cb.isNotNull(root.get("id")); // any
+        }
+        
         List<Predicate> predicates = new ArrayList<Predicate>();
         for (String indicator : indicators.keySet()) {
           predicates.add(hasIndicator(indicator, indicators.get(indicator)).toPredicate(root, query, cb));
@@ -41,6 +53,10 @@ public final class SnapshotSpecifications {
   public static Specification<SnapshotEconomicEntity> forFamilies(List<Long> familyIds) {
     return new Specification<SnapshotEconomicEntity>() {
       public Predicate toPredicate(Root<SnapshotEconomicEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        if (familyIds == null) {
+          return cb.isNotNull(root.get("id")); // any
+        }
+
         List<Predicate> predicates = new ArrayList<Predicate>();
         for (Long familyId : familyIds) {
           predicates.add(cb.equal(root.join("family").get("familyId"), familyId));

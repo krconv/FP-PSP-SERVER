@@ -1,0 +1,1728 @@
+{
+  "title": "Stoplight survey example with defaults for UK",
+  "description": "A simple stoplight survey example with default values for UK.",
+  "type": "object",
+  "required": [
+    "identificationType",
+  	"identificationNumber",
+  	"firstName",
+  	"lastName",
+  	"birthdate",
+  	"countryOfBirth",
+  	"gender",
+    "familyUbication",
+    "currency",
+    "areaOfResidence",
+    "employmentStatusPrimary",
+    "activityMain",
+    "employmentStatusSecondary",
+    "activitySecondary",
+    "householdMonthlyIncome",
+    "salaryIncome",
+    "benefitIncome",
+    "pensionIncome",
+    "savingsIncome",
+    "otherIncome",
+    "householdMonthlyOutgoing",
+    "netSuplus",
+    "educationClientLevel",
+    "educationPersonMostStudied",
+    "educationLevelAttained",
+    "housingSituation",
+    "familyCity",
+    "familyCountry",
+    "income",
+    "documentation",
+    "drinkingWaterAccess",
+    "nearbyHealthPost",
+    "alimentation",
+    "garbageDisposal",
+    "safeHouse",
+    "safeBathroom",
+    "electricityAccess",
+    "refrigerator",
+    "separateBed",
+    "separateBedrooms",
+    "properKitchen",
+    "phone",
+    "security",
+    "readAndWrite",
+    "middleEducation",
+    "socialCapital",
+    "informationAccess",
+    "influenceInPublicSector",
+    "awarenessOfNeeds",
+    "selfEsteem",
+    "autonomyDecisions"
+  ],
+  "properties": {
+  
+  "identificationType": {
+  		"type": "string",
+      "title": {
+        "es": "Document type"
+      },
+      "enum": [
+        "CI",
+        "DNI",
+        "PASSPORT",
+        "DRIVERLICENSE"
+      ],
+      "enumNames": [
+        "Identity card",
+        "DNI",
+        "Passport",
+        "Driver License"
+      ],
+      "default": "CI"
+  	},
+  	
+  	"identificationNumber": {
+      "type": "string",
+      "title": {
+        "es": "Please enter your selected document number"
+      },
+      "default": ""
+    },
+    
+    "firstName": {
+      "type": "string",
+      "title": {
+        "es": "Enter your first name"
+      },
+      "default": ""
+    },
+    
+    "lastName": {
+      "type": "string",
+      "title": {
+        "es": "Enter your surname"
+      },
+      "default": ""
+    },
+    
+    "birthdate": {
+      "type": "string",
+      "format": "date",
+      "title": {
+        "es": "Enter your date of birth"
+      }
+    },
+    
+    "countryOfBirth": {
+    	  "type": "string",
+        "title": {
+          "es": "Enter your country of birth"
+        },
+        "enum": [
+          "PY",
+  		"AD",
+  		"AE",
+  		"AF",
+  		"AG",
+  		"AI",
+  		"AL",
+  		"AM",
+  		"AN",
+  		"AO",
+  		"AQ",
+  		"AR",
+  		"AS",
+  		"AT",
+  		"AU",
+  		"AW",
+  		"AX",
+  		"AZ",
+  		"BA",
+  		"BB",
+  		"BD",
+  		"BE",
+  		"BF",
+  		"BG",
+  		"BH",
+  		"BI",
+  		"BJ",
+  		"BL",
+  		"BM",
+  		"BN",
+  		"BO",
+  		"BR",
+  		"BS",
+  		"BT",
+  		"BV",
+  		"BW",
+  		"BY",
+  		"BZ",
+  		"CA",
+  		"CC",
+  		"CF",
+  		"CG",
+  		"CH",
+  		"CI",
+  		"CK",
+  		"CL",
+  		"CM",
+  		"CN",
+  		"CO",
+  		"CR",
+  		"CU",
+  		"CV",
+  		"CX",
+  		"CY",
+  		"CZ",
+  		"DE",
+  		"DJ",
+  		"DK",
+  		"DM",
+  		"DO",
+  		"DZ",
+  		"EC",
+  		"EE",
+  		"EG",
+  		"EH",
+  		"ER",
+  		"ES",
+  		"ET",
+  		"FI",
+  		"FJ",
+  		"FK",
+  		"FM",
+  		"FO",
+  		"FR",
+  		"GA",
+  		"GB",
+  		"GD",
+  		"GE",
+  		"GF",
+  		"GG",
+  		"GH",
+  		"GI",
+  		"GL",
+  		"GM",
+  		"GN",
+  		"GP",
+  		"GQ",
+  		"GR",
+  		"GS",
+  		"GT",
+  		"GU",
+  		"GW",
+  		"GY",
+  		"HK",
+  		"HM",
+  		"HN",
+  		"HR",
+  		"HT",
+  		"HU",
+  		"ID",
+  		"IE",
+  		"IL",
+  		"IM",
+  		"IN",
+  		"IO",
+  		"IQ",
+  		"IR",
+  		"IS",
+  		"IT",
+  		"JE",
+  		"JM",
+  		"JO",
+  		"JP",
+  		"KE",
+  		"KG",
+  		"KH",
+  		"KI",
+  		"KM",
+  		"KN",
+  		"KP",
+  		"KR",
+  		"KW",
+  		"KY",
+  		"KZ",
+  		"LA",
+  		"LB",
+  		"LC",
+  		"LI",
+  		"LK",
+  		"LR",
+  		"LS",
+  		"LT",
+  		"LU",
+  		"LV",
+  		"LY",
+  		"MA",
+  		"MC",
+  		"MD",
+  		"ME",
+  		"MG",
+  		"MH",
+  		"MK",
+  		"ML",
+  		"MM",
+  		"MN",
+  		"MO",
+  		"MQ",
+  		"MR",
+  		"MS",
+  		"MT",
+  		"MU",
+  		"MV",
+  		"MW",
+  		"MX",
+  		"MY",
+  		"MZ",
+  		"NA",
+  		"NC",
+  		"NE",
+  		"NF",
+  		"NG",
+  		"NI",
+  		"NL",
+  		"NO",
+  		"NP",
+  		"NR",
+  		"NU",
+  		"NZ",
+  		"OM",
+  		"PA",
+  		"PE",
+  		"PF",
+  		"PG",
+  		"PH",
+  		"PK",
+  		"PL",
+  		"PM",
+  		"PN",
+  		"PR",
+  		"PS",
+  		"PT",
+  		"PW",
+  		"QA",
+  		"RE",
+  		"RO",
+  		"RS",
+  		"RU",
+  		"RW",
+  		"SA",
+  		"SB",
+  		"SC",
+  		"SD",
+  		"SE",
+  		"SG",
+  		"SH",
+  		"SI",
+  		"SJ",
+  		"SK",
+  		"SL",
+  		"SM",
+  		"SN",
+  		"SO",
+  		"SR",
+  		"ST",
+  		"SV",
+  		"SY",
+  		"SZ",
+  		"TC",
+  		"TD",
+  		"TF",
+  		"TG",
+  		"TH",
+  		"TH",
+  		"TJ",
+  		"TK",
+  		"TL",
+  		"TM",
+  		"TN",
+  		"TO",
+  		"TR",
+  		"TT",
+  		"TV",
+  		"TW",
+  		"UA",
+  		"UG",
+  		"US",
+  		"UY",
+  		"UZ",
+  		"VA",
+  		"VC",
+  		"VE",
+  		"VG",
+  		"VI",
+  		"VN",
+  		"VU",
+  		"WF",
+  		"WS",
+  		"YE",
+  		"YT",
+  		"ZA"
+  	  ],
+        "enumNames": [
+        "Paraguay",
+        "Andorra",
+        "United Arab Emirates",
+        "Afghanistan",
+        "Old and bearded",
+        "Eel",
+        "Albania",
+        "Armenia",
+        "Netherlands Antilles",
+        "Angola",
+        "Antarctica",
+        "Argentina",
+        "American Samoa",
+        "Austria",
+        "Australia",
+        "Aruba",
+        "Islas Áland",
+        "Azerbaijan",
+        "Bosnia and Herzegovina",
+        "Barbados",
+        "Bangladesh",
+        "Belgium",
+        "Burkina Faso",
+        "Bulgaria",
+        "Bahrain",
+        "Burundi",
+        "Benin",
+        "San Bartolome",
+        "Bermuda",
+        "Brunei",
+        "Bolivia",
+        "Brazil",
+        "Bahamas",
+        "Bhutan",
+        "Bouvet Island",
+        "Botswana",
+        "Belarus",
+        "Belize",
+        "Glen",
+        "Cocos Islands",
+        "Central African Republic",
+        "Congo",
+        "Switzerland",
+        "Ivory Coast",
+        "Cook Islands",
+        "Chile",
+        "Cameroon",
+        "China",
+        "Colombia",
+        "Costa Rica",
+        "Cuba",
+        "Cape Verde",
+        "Christmas Islands",
+        "Cyprus",
+        "Czech Republic",
+        "Germany",
+        "Djibouti",
+        "Denmark",
+        "Domínica",
+        "Dominican Republic",
+        "Algiers",
+        "Ecuador",
+        "Estonia",
+        "Egypt",
+        "Occidental Sahara",
+        "Eritrea",
+        "Spain",
+        "Ethiopia",
+        "Finland",
+        "Fiji",
+        "Falkland Islands",
+        "Micronesia",
+        "Faroe Islands",
+        "France",
+        "Gabon",
+        "United Kingdom",
+        "Pomegranate",
+        "Georgia",
+        "French Guiana",
+        "Guernsey",
+        "Ghana",
+        "Gibraltar",
+        "Greenland",
+        "Gambia",
+        "Guinea",
+        "Guadalupe",
+        "Equatorial Guinea",
+        "Greece",
+        "South Georgia and the South Sandwich Islands",
+        "Guatemala",
+        "Guam",
+        "Guinea-Bissau",
+        "Guiana",
+        "Hong Kong",
+        "Heard and McDonald Islands",
+        "Honduras",
+        "Croatia",
+        "Haiti",
+        "Hungary",
+        "Indonesia",
+        "Ireland",
+        "Israel",
+        "Isle of Man",
+        "India",
+        "British Indian Ocean Territory",
+        "Iraq",
+        "Iran",
+        "Iceland",
+        "Italy",
+        "Sweater",
+        "Jamaica",
+        "Jordan",
+        "Japan",
+        "Kenya",
+        "Kyrgyzstan",
+        "Cambodia",
+        "Kiribati",
+        "Comoros",
+        "Saint Kitts and Nevis",
+        "North Korea",
+        "South Korea",
+        "Kuwait",
+        "Cayman Islands",
+        "Kazakhstan",
+        "Laos",
+        "Lebanon",
+        "St. lucia",
+        "Liechtenstein",
+        "Sri Lanka",
+        "Liberia",
+        "Lesotho",
+        "Lithuania",
+        "Luxembourg",
+        "Latvia",
+        "Libya",
+        "Morocco",
+        "Monaco",
+        "Moldova",
+        "Montenegro",
+        "Madagascar",
+        "Marshall Islands",
+        "Macedonia",
+        "Mali",
+        "Myanmar",
+        "Mongolia",
+        "Macao",
+        "Martinique",
+        "Mauritania",
+        "Montserrat",
+        "Malt",
+        "Mauricio",
+        "Maldives",
+        "Malawi",
+        "Mexico",
+        "Malaysia",
+        "Mozambique",
+        "Namibia",
+        "New Caledonia",
+        "Niger",
+        "Norkfolk Islands",
+        "Nigeria",
+        "Nicaragua",
+        "Netherlands",
+        "Norway",
+        "Nepal",
+        "Nauru",
+        "Niue",
+        "New Zealand",
+        "Oman",
+        "Panama",
+        "Peru",
+        "French Polynesia",
+        "Papua New Guinea",
+        "Philippines",
+        "Pakistan",
+        "Poland",
+        "Saint Pierre and Miquelon",
+        "Pitcairn Islands",
+        "Puerto Rico",
+        "Palestine",
+        "Portugal",
+        "Palau Islands",
+        "Qatar",
+        "Meeting",
+        "Romania",
+        "Serbia and Montenegro",
+        "Russia",
+        "Rwanda",
+        "Saudi Arabia",
+        "Solomon Islands",
+        "Seychelles",
+        "Sudan",
+        "Sweden",
+        "Singapore",
+        "St. Helen",
+        "Slovenia",
+        "Svalbard and Jan Mayen Islands",
+        "Slovakia",
+        "Sierra Leone",
+        "San Marino",
+        "Senegal",
+        "Somalia",
+        "Surinam",
+        "Sao Tome and Principe",
+        "The Savior",
+        "Syria",
+        "Swaziland",
+        "Turks and Caicos Islands",
+        "Chad",
+        "French Southern Territories",
+        "Togo",
+        "Thailand",
+        "Tanzania",
+        "Tajikistan",
+        "Tokelau",
+        "Timor-Leste",
+        "Turkmenistan",
+        "Tunisia",
+        "Tonga",
+        "Turkey",
+        "Trinidad and Tobago",
+        "Tuvalu",
+        "Taiwan",
+        "Ukraine",
+        "Uganda",
+        "United States of America",
+        "Uruguay",
+        "Uzbekistan",
+        "Vatican CITY",
+        "St. Vincent and the Grenadines",
+        "Venezuela",
+        "British Virgin Islands",
+        "Virgin Islands of the United States of America",
+        "Vietnam",
+        "Vanuatu",
+        "Wallis and Futuna",
+        "Samoa",
+        "Yemen",
+        "Mayotte",
+        "South Africa"
+  	  ],
+        "default": "GB"
+     },
+  	
+  	"gender": {
+  	  "type": "string",
+      "title": {
+        "es": "Enter your gender"
+      },
+      "enum": [
+        "F",
+        "M",
+        "O"
+      ],
+      "enumNames": [
+        "Female",
+        "Male",
+        "Prefer not to disclose"
+      ],
+      "default": "F"
+   },
+   
+   "phoneNumber": {
+      "type": "string",
+      "title": {
+        "es": "Contact number or email address"
+      }
+    },
+  
+    "currency": {
+      "type": "string",
+      "title": {
+        "es": "Please enter the currency in which you earn your main income"
+      },
+      "default": "GBP/Pound Sterling "
+    },
+    "areaOfResidence": {
+      "type": "string",
+      "title": {
+        "es": "Please enter the area you live in"
+      },
+      "enum": [
+        "URBAN",
+        "RURAL"
+      ],
+      "enumNames": [
+        "URBAN",
+        "RURAL"
+      ],
+      "default": "URBAN"
+    },
+    "employmentStatusPrimary": {
+      "type": "string",
+      "title": {
+        "es": "Please enter your primary economic activity"
+      },
+      "enum": [
+        "SELF-EMPLOYED",
+        "UNEMPLOYED",
+        "EMPLOYEE-FULL-TIME",
+        "EMPLOYEE-PART-TIME",
+        "CASUAL-WORK",
+        "WORK-BASED-TRAINING",
+        "STUDENT",
+        "VOLUNTEERING-INTERNSHIP",
+        "OTHER-INACTIVE"
+      ],
+      "enumNames": [
+        "Independent work",
+        "Unemployed",
+        "Full time employment",
+        "Part time employment",
+        "Occasional work",
+        "Work Based Training",
+        "Student",
+        "Volunteering/Internship",
+        "Other"
+      ],
+      "default": "SELF-EMPLOYED"
+    },
+    "activityMain": {
+      "type": "string",
+      "title": {
+        "es": "Please enter your main type of economic activity"
+      },
+      "enum": [
+        "AGRICULTURE",
+        "MINING-QUARRYING",
+        "MANUFACTURING",
+        "ELECTRICITY-GAS",
+        "WATER-SEWERAGE",
+        "CONSTRUCTION",
+        "TRADE",
+        "TRANSPORTATION-STORAGE",
+        "ACCOMMODATION-FOOD",
+        "INFORMATION-COMMUNICATION",
+        "FINANCIAL",
+        "REAL-ESTATE",
+        "PROFESSIONAL",
+        "ADMINISTRATIVE",
+        "PUBLIC-ADMINISTRATION",
+        "EDUCATION",
+        "HEALTH-SOCIAL",
+        "ARTS",
+        "OTHER",
+        "HOUSEHOLDS",
+        "EXTRATERRITORIAL"
+      ],
+      "enumNames": [
+        "Agriculture, Forestry and Fisheries",
+        "Mines and Quarries",
+        "Manufacture",
+        "Supply of electricity, gas, steam and air conditioning",
+        "Activities of water supply, sewage and waste management",
+        "Building",
+        "Wholesale and retail, repair of vehicles and motorcycles",
+        "Transportation and storage",
+        "Accommodation activities and food service",
+        "Information and communication",
+        "Financial and insurance activities",
+        "Real estate activities",
+        "Professional, scientific and technical activities",
+        "Administrative activities",
+        "Public administration and defense",
+        "Education",
+        "Health activities and social service",
+        "Art, entertainment and recreation",
+        "Other service activities",
+        "Activities of households as employers; other activities that produce goods and services for their own use",
+        "Activities of extraterritorial organizations"
+      ],
+      "default": "AGRICULTURE"
+    },
+    "employmentStatusSecondary": {
+      "type": "string",
+      "title": {
+        "es": "If you have one, please enter your secondary economic activity"
+      },
+      "enum": [
+        "SELF-EMPLOYED",
+        "UNEMPLOYED",
+        "EMPLOYEE-FULL-TIME",
+        "EMPLOYEE-PART-TIME",
+        "CASUAL-WORK",
+        "WORK-BASED-TRAINING",
+        "STUDENT",
+        "VOLUNTEERING-INTERNSHIP",
+        "OTHER-INACTIVE"
+      ],
+      "enumNames": [
+    	"Independent work",
+    	"I do not have a secondary economic activity",
+    	"Full-time employment",
+    	"Timeshare employment",
+    	"Occasional work",
+    	"Work Based Training",
+    	"Student",
+    	"Volunteer / Internship",
+    	"Other"
+      ],
+      "default": "SELF-EMPLOYED"
+    },
+    "activitySecondary": {
+      "type": "string",
+      "title": {
+        "es": "Please enter the type of your secondary economic activity"
+      },
+      "enum": [
+        "AGRICULTURE",
+        "MINING-QUARRYING",
+        "MANUFACTURING",
+        "ELECTRICITY-GAS",
+        "WATER-SEWERAGE",
+        "CONSTRUCTION",
+        "TRADE",
+        "TRANSPORTATION-STORAGE",
+        "ACCOMMODATION-FOOD",
+        "INFORMATION-COMMUNICATION",
+        "FINANCIAL",
+        "REAL-ESTATE",
+        "PROFESSIONAL",
+        "ADMINISTRATIVE",
+        "PUBLIC-ADMINISTRATION",
+        "EDUCATION",
+        "HEALTH-SOCIAL",
+        "ARTS",
+        "OTHER",
+        "HOUSEHOLDS",
+        "EXTRATERRITORIAL"
+      ],
+      "enumNames": [
+    	"Agriculture, Forestry and Fishing",
+    	"Mines and Quarries",
+    	"Manufacture",
+    	"Supply of electricity, gas, steam and air conditioning",
+    	"Activities of water supply, sewage and waste management",
+    	"Building",
+    	"Wholesale and retail trade, repair of vehicles and motorcycles",
+    	"Transportation and storage",
+    	"Accommodation and food service activities",
+    	"Information and communication",
+    	"Financial and insurance activities",
+    	"Real estate activities",
+    	"Professional, scientific and technical activities",
+    	"Administrative activities",
+    	"Public administration and defense",
+    	"Education",
+    	"Health and social service activities",
+    	"Art, entertainment and recreation",
+    	"Other service activities",
+    	"Activities of households as employers, other activities that produce goods and services for their own use",
+    	"Activities of extraterritorial organizations"
+      ],
+      "default": "AGRICULTURE"
+    },
+    "householdMonthlyIncome": {
+      "type": "integer",
+      "title": {
+        "es": "Please enter an estimate of your gross monthly household income"
+      },
+      "default": 0
+    },
+    "salaryIncome": {
+      "type": "integer",
+      "title": {
+        "es": "How many people under 18 live in your household (Test)"
+      },
+      "default": 0
+    },
+    "benefitIncome": {
+      "type": "integer",
+      "title": {
+        "es": "Do you receive any state income (e.g. benefits, pension, allowances)? Please indicate the approximate monthly amount"
+      },
+      "default": 0
+    },
+    "pensionIncome": {
+      "type": "integer",
+      "title": {
+        "es": "pensionIncome (Test)"
+      },
+      "default": 0
+    },
+    "savingsIncome": {
+      "type": "integer",
+      "title": {
+        "es": "savingsIncome (Test)"
+      },
+      "default": 0
+    },
+    "otherIncome": {
+      "type": "integer",
+      "title": {
+        "es": "otherIncome (Test)"
+      },
+      "default": 0
+    },
+    "householdMonthlyOutgoing": {
+      "type": "integer",
+      "title": {
+        "es": "householdMonthlyOutgoing (Test)"
+      },
+      "default": 0
+    },
+    "netSuplus": {
+      "type": "integer",
+      "title": {
+        "es": "netSuplus (Test)"
+      },
+      "default": 0
+    },
+    "educationClientLevel": {
+      "type": "string",
+      "title": {
+        "es": "Please enter your education level"
+      },
+      "enum": [
+    	  "SCHOOL-INCOMPLETE", 
+    	  "SCHOOL-COMPLETE", 
+    	  "COLLEGE-INCOMPLETE", 
+    	  "COLLEGE-COMPLETE", 
+    	  "UNIVERSITY-INCOMPLETE", 
+    	  "UNIVERSITY-COMPLETE"
+      ],
+      "enumNames": [
+    	  "School incomplete", 
+    	  "School complete", 
+    	  "College incomplete", 
+    	  "College complete", 
+    	  "University incomplete", 
+    	  "University complete"
+      ],
+      "default": "SCHOOL-COMPLETE"
+    },
+    "educationPersonMostStudied": {
+      "type": "string",
+      "title": {
+        "es": "Level of education of the person with more studies in the family"
+      },
+      "enum": [
+        "INCOMPLETE-PRIMARY",
+        "COMPLETED-PRIMARY",
+        "INCOMPLETE-SECONDARY",
+        "COMPLETED-SECONDARY",
+        "INCOMPLETE-COLLEGE",
+        "COLLEGE-DEGREE"
+      ],
+      "enumNames": [
+    	"Elementary incomplete",
+    	"Complete primary",
+    	"Incomplete secondary",
+    	"Completed secondary",
+    	"Incomplete university",
+    	"College degree"
+      ],
+      "default": "INCOMPLETE-PRIMARY"
+    },
+    "educationLevelAttained": {
+      "type": "string",
+      "title": {
+        "es": "Level of education reached by the person with the most studies in the family"
+      },
+      "enum": [
+        "NONE",
+        "LEVEL-1",
+        "LEVEL-2",
+        "LEVEL-3",
+        "LEVEL-4",
+        "LEVEL-5",
+        "LEVEL-6",
+        "OTHER"
+      ],
+      "enumNames": [
+        "None",
+        "Level 1",
+        "Level 2",
+        "Level 3",
+        "Level 4",
+        "Level 5",
+        "Level 6",
+        "Other"
+      ],
+      "default": "NONE"
+    },
+    "housingSituation": {
+      "type": "string",
+      "title": {
+        "es": "Housing situation"
+      },
+      "enum": [
+    	  "OWNER", 
+    	  "COUNCIL-HOUSING-ASSOCIATION", 
+    	  "PRIVATE-RENTAL", 
+    	  "LIVING-WITH-PARENTS", 
+    	  "LIVING-WITH-PARTNER", 
+    	  "IN-CARE", 
+    	  "OTHER"
+      ],
+      "enumNames": [
+    	  "Owner", 
+    	  "Council/Housing Association", 
+    	  "Private rental", 
+    	  "Living with Parents", 
+    	  "Living with Partner", 
+    	  "In care", 
+    	  "Other"
+      ],
+      "default": "OWNER"
+    },
+    "otherUsefulInfo": {
+    	"type": "string",
+        "title": {
+          "es": "Is there any member with disabilities in your household? Please indicate the disability type"
+        },
+        "enum": [
+        	"PHYSICAL", 
+        	"MENTAL", 
+        	"LEARNING", 
+        	"SENSORY",
+        	"OTHER",
+        	"NO-MEMBER-DISABILITIES"
+        ],
+        "enumNames": [
+        	"Physical", 
+        	"Mental", 
+        	"Learning", 
+        	"Sensory",
+        	"Other",
+        	"No member with disabilities"
+        ],
+        "default": "NO-MEMBER-DISABILITIES"
+    },
+    
+    "familyCountry":{
+        "type": "string",
+        "title": {
+          "es": "familyCountry (Test)"
+        },
+        "enum": [
+          "United Kingdom"
+        ],
+        "enumNames": [
+          "United Kingdom"
+        ],
+        "default": "United Kingdom"
+      
+      },
+    
+      "familyCity":{
+          "type": "string",
+          "title": {
+            "es": "familyCity (test)"
+          },
+          "enum": [
+            "Aberdeen",
+		    "Armagh",
+		    "Bangor",
+		    "Bath",
+		    "Belfast",
+		    "Birmingham",
+		    "Bradford",
+		    "Brighton and Hove",
+		    "Bristol",
+		    "Cambridge",
+		    "Canterbury",
+		    "Cardiff",
+		    "Carlisle",
+		    "Chester",
+		    "Chichester",
+		    "City of London",
+		    "Coventry",
+		    "Derby",
+		    "Dundee",
+		    "Durham",
+		    "Edinburgh",
+		    "Ely",
+		    "Exeter",
+		    "Glasgow",
+		    "Gloucester",
+		    "Hereford",
+		    "Inverness",
+		    "Kingston upon Hull",
+		    "Lancaster",
+		    "Leeds",
+		    "Leicester",
+		    "Lichfield",
+		    "Lincoln",
+		    "Lisburn",
+		    "Liverpool",
+		    "Londonderry",
+		    "Manchester",
+		    "Newcastle upon Tyne",
+		    "Newport",
+		    "Newry",
+		    "Norwich",
+		    "Nottingham",
+		    "Oxford",
+		    "Peterborough",
+		    "Plymouth",
+		    "Portsmouth",
+		    "Preston",
+		    "Ripon",
+		    "Salford",
+		    "Salisbury",
+		    "Sheffield",
+		    "Southampton",
+		    "St Albans",
+		    "St Davids",
+		    "Stirling",
+		    "Stoke-on-Trent",
+		    "Sunderland",
+		    "Swansea",
+		    "Truro",
+		    "Wakefield",
+		    "Wells",
+		    "Westminster",
+		    "Winchester",
+		    "Wolverhampton",
+		    "Worcester",
+		    "York"
+		          ],
+		          "enumNames": [
+		            "Aberdeen",
+		    "Armagh",
+		    "Bangor",
+		    "Bath",
+		    "Belfast",
+		    "Birmingham",
+		    "Bradford",
+		    "Brighton and Hove",
+		    "Bristol",
+		    "Cambridge",
+		    "Canterbury",
+		    "Cardiff",
+		    "Carlisle",
+		    "Chester",
+		    "Chichester",
+		    "City of London",
+		    "Coventry",
+		    "Derby",
+		    "Dundee",
+		    "Durham",
+		    "Edinburgh",
+		    "Ely",
+		    "Exeter",
+		    "Glasgow",
+		    "Gloucester",
+		    "Hereford",
+		    "Inverness",
+		    "Kingston upon Hull",
+		    "Lancaster",
+		    "Leeds",
+		    "Leicester",
+		    "Lichfield",
+		    "Lincoln",
+		    "Lisburn",
+		    "Liverpool",
+		    "Londonderry",
+		    "Manchester",
+		    "Newcastle upon Tyne",
+		    "Newport",
+		    "Newry",
+		    "Norwich",
+		    "Nottingham",
+		    "Oxford",
+		    "Peterborough",
+		    "Plymouth",
+		    "Portsmouth",
+		    "Preston",
+		    "Ripon",
+		    "Salford",
+		    "Salisbury",
+		    "Sheffield",
+		    "Southampton",
+		    "St Albans",
+		    "St Davids",
+		    "Stirling",
+		    "Stoke-on-Trent",
+		    "Sunderland",
+		    "Swansea",
+		    "Truro",
+		    "Wakefield",
+		    "Wells",
+		    "Westminster",
+		    "Winchester",
+		    "Wolverhampton",
+		    "Worcester",
+		    "York"
+		          ],
+		     "default": "Newcastle upon Tyne"
+        
+    }, 
+    "familyUbication": {
+    	"type": "string",
+    	"title": {
+    		"es": "Please select the geographic location of your household"
+    	},
+        "default":"54.979645, -1.617649" 
+    },
+    "income": {
+      "type": "array",
+      "title": {
+        "es": "Income above the Poverty Line"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/1-1.jpg", 
+          "description":"Household income is above 60% of the UK average. Single: £9,500 or more. Couple with no children £14,200 or more. Couple with two children £20,000 or more.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/1-2.jpg", 
+          "description":"Household income is currently above 60% of the UK average, but is likely to go down over the coming months", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/1-3.jpg", 
+          "description":"Household income is below 60% of the UK average. Single: £9,500 or more. Couple with no children £14,200 or more. Couple with two children £20,000 or more",
+          "value":"RED"}
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/1-1.jpg",
+          "description":"Household income is above 60% of the UK average. Single: £9,500 or more. Couple with no children £14,200 or more. Couple with two children £20,000 or more.",
+          "value":"GREEN"}]
+    },
+    "documentation": {
+      "type": "array",
+      "title": {
+        "es": "Person Identification"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/6-1.jpg", 
+          "description":"In my household all family members have valid ID and proper documentation. I can prove my ID to anyone who asks. These may include: Driving License or Birth Certificate.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/6-2.jpg", 
+          "description":"In my household my family has problems with documentation and we are actively looking to solve it.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/6-3.jpg", 
+          "description":"Someone in my household does not have an ID/documentation or has a problem with ID/documentation and does not know how to solve it or can’t afford to do so.",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/6-1.jpg", 
+          "description":"In my household all family members have valid ID and proper documentation. I can prove my ID to anyone who asks. These may include: Driving License or Birth Certificate.",
+          "value":"GREEN"}]
+    },
+    
+    "drinkingWaterAccess": {
+      "type": "array",
+      "title": {
+        "es": "Access to drinking water (Review)"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/12-1.jpg", 
+          "description":"In my house we always have access to a bathroom, which has proper ventilation, hot and cold running water, privacy, and is regularly cleaned",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/12-2.jpg", 
+          "description":"In my house we share the bathroom with more than 4 people and/or the bathroom is not regularly cleaned, or it is faulty.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/12-3.jpg", 
+          "description":"In my house we do not always have access to a bathroom and/or our bathroom is not in a bad condition.",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/12-1.jpg", 
+          "description":"In my house we always have access to a bathroom, which has proper ventilation, hot and cold running water, privacy, and is regularly cleaned",
+          "value":"GREEN"}]
+    },
+    "nearbyHealthPost": {
+      "type": "array",
+      "title": {
+        "es": "Access to Health Care"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/23-1.jpg", 
+          "description":"Everyone in the house has a local GP, is registered and uses the service when needed and is happy with it.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/23-2.jpg", 
+          "description":"In my household everyone is registered but does not everyone uses the service.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/23-3.jpg", 
+          "description":"Someone in the household is not registered at a local GP or does not seek medical treatment when needed.",
+          "value":"RED"}
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/23-1.jpg", 
+          "description":"Everyone in the house has a local GP, is registered and uses the service when needed and is happy with it.",
+          "value":"GREEN"}]
+    },
+    "alimentation": {
+      "type": "array",
+      "title": {
+        "es": "Eating a nutritious diet"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/22-1.jpg", 
+          "description":"We are confident that we know what we need for a healthy diet for all family members and make sure we consume a nutritious healthy diet.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/22-2.jpg", 
+          "description":"We get confused with healthy eating information or cannot afford to buy healthy food.  I am not sure if we eat a healthy diet or not.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/22-3.jpg", 
+          "description":"We don’t know very much about healthy eating and are not concerned whether we are eating healthy food or not.  Our diet does not usually include fruit or vegetables.",
+          "value":"RED"}
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/22-1.jpg", 
+          "description":"We are confident that we know what we need for a healthy diet for all family members and make sure we consume a nutritious healthy diet.",
+          "value":"GREEN"}]
+    },
+    "garbageDisposal": {
+      "type": "array",
+      "title": {
+        "es": "Rubbish Disposal"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/29-1.jpg", 
+          "description":"We use the full range of rubbish disposal services. When needed we take items to the neighbourhood-recycling centre.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/29-2.jpg", 
+          "description":"My household has access to rubbish bins but don’t use them poperly. I am not happy with rubbish disposal system.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/29-3.jpg", 
+          "description":"My household does not have access or does not use a household or communal waste bin. Rubbish is rarely collected in my area.",
+          "value":"RED"}
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/29-1.jpg", 
+          "description":"We use the full range of rubbish disposal services. When needed we take items to the neighbourhood-recycling centre.",
+          "value":"GREEN"}]
+    },
+    "safeHouse": {
+      "type": "array",
+      "title": {
+    	"es": "Safe Home"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/11-1.jpg", 
+          "description":"My house is very safe.  There are no faulty appliances, holes in walls, loose wires, or damp.  Doors and windows have locks and the building is appropriate for all weathers",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/11-2.jpg", 
+          "description":"My house has minor safety issues that are a risk for people who live there.  It is unsuitable in some weather conditions (e.g. windows let in the cold, there is risk of flooding)", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/11-3.jpg", 
+          "description":"My house has serious safety issues that are a risk for people who live there.  It is unsuitable in certain weather conditions (e.g. significant damp or mould, always floods in heavy rains, doors and windows do not lock securely)",
+          "value":"RED"}
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/11-1.jpg", 
+          "description":"My house is very safe.  There are no faulty appliances, holes in walls, loose wires, or damp.  Doors and windows have locks and the building is appropriate for all weathers",
+          "value":"GREEN"}]
+    },
+    "safeBathroom": {
+    	"type": "array",
+        "title": {
+          "es": "Sanitation and Sewage"
+        },
+        "items": {
+          "type": "object",
+          "enum": [
+            {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/12-1.jpg", 
+            "description":"In my house we always have access to a bathroom, which has proper ventilation, hot and cold running water, privacy, and is regularly cleaned",
+            "value":"GREEN"},
+            {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/12-2.jpg", 
+            "description":"In my house we share the bathroom with more than 4 people and/or the bathroom is not regularly cleaned, or it is faulty.", 
+            "value":"YELLOW"},
+            {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/12-3.jpg", 
+            "description":"In my house we do not always have access to a bathroom and/or our bathroom is not in a bad condition.",
+            "value":"RED"}
+            
+          ]
+        },
+        "uniqueItems": true,
+        "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/12-1.jpg", 
+            "description":"In my house we always have access to a bathroom, which has proper ventilation, hot and cold running water, privacy, and is regularly cleaned",
+            "value":"GREEN"}]
+    },
+    "electricityAccess": {
+      "type": "array",
+      "title": {
+        "es": "Access to gas/electricity"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/10-1.jpg", 
+          "description":"In my household we can afford to pay for gas and/or electricity ALL the time.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/10-2.jpg", 
+          "description":"In my household we have gas and/or electricity but don’t use it all the time because of the cost.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/10-3.jpg", 
+          "description":"In my household in the past year we sometimes have had no gas or electricity for heating or cooking.  Sometimes we need to choose between food and heating.",
+          "value":"RED"}
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/10-1.jpg", 
+          "description":"In my household we can afford to pay for gas and/or electricity ALL the time.",
+          "value":"GREEN"}]
+    },
+    "refrigerator": {
+      "type": "array",
+      "title": {
+        "es": "Household Appliances"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/8-1.jpg", 
+          "description":"In my household we have all essential appliances of our own and these work properly. These include: fridge, freezer, washing machine, cooker etc.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/8-2.jpg", 
+          "description":"In my household some essential appliances are faulty or do not work properly.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/8-3.jpg", 
+          "description":"In my household we have very limited access to or do not have one or more essential household appliances.",
+          "value":"RED"}
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/8-1.jpg", 
+          "description":"In my household we have all essential appliances of our own and these work properly. These include: fridge, freezer, washing machine, cooker etc.",
+          "value":"GREEN"}]
+    },
+    "separateBed": {
+      "type": "array",
+      "title": {
+        "es": "Separate Bedrooms"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/13-1.jpg", 
+          "description":"In my house, adults, adolescents and children do not sleep in the same bedrooms and the house is not overcrowded. Everyone has his or her privacy.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/13-2.jpg", 
+          "description":"In my house adults, adolescents and children sleep in the same bedrooms and some people in my house would prefer more space or privacy to sleep", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/13-3.jpg", 
+          "description":"In my house multiple people sleep in the same bedroom.  A mix of adults, adolescents and children share bedrooms with each other. My house is overcrowded and we need more space.",
+          "value":"RED"}
+          ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/13-1.jpg", 
+          "description":"In my house, adults, adolescents and children do not sleep in the same bedrooms and the house is not overcrowded. Everyone has his or her privacy.",
+          "value":"GREEN"}]
+    },
+    "separateBedrooms": {
+    	"type": "array",
+        "title": {
+          "es": "Separate Bedrooms (Duplicate)"
+        },
+        "items": {
+          "type": "object",
+          "enum": [
+            {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/13-1.jpg", 
+            "description":"In my house, adults, adolescents and children do not sleep in the same bedrooms and the house is not overcrowded. Everyone has his or her privacy.",
+            "value":"GREEN"},
+            {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/13-2.jpg", 
+            "description":"In my house adults, adolescents and children sleep in the same bedrooms and some people in my house would prefer more space or privacy to sleep", 
+            "value":"YELLOW"},
+            {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/13-3.jpg", 
+            "description":"In my house multiple people sleep in the same bedroom.  A mix of adults, adolescents and children share bedrooms with each other. My house is overcrowded and we need more space.",
+            "value":"RED"}
+            ]
+        },
+        "uniqueItems": true,
+        "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/13-1.jpg", 
+            "description":"In my house, adults, adolescents and children do not sleep in the same bedrooms and the house is not overcrowded. Everyone has his or her privacy.",
+            "value":"GREEN"}]
+    },
+    "properKitchen": {
+      "type": "array",
+      "title": {
+        "es": "Cooking Facilities"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/9-1.jpg", 
+          "description":"In my household we have a ventilated kitchen, a cooker and all the necessary kitchen equipment to cook, store food and for all members of the house to eat properly.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/9-2.jpg", 
+          "description":"In my household we have an adequate kitchen; however we need to improve the facilities or need more equipment to cook and eat properly", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/9-3.jpg", 
+          "description":"In my household we do not have a proper kitchen or equipment. We have to cook elsewhere or share a space with many other",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/9-1.jpg", 
+          "description":"In my household we have a ventilated kitchen, a cooker and all the necessary kitchen equipment to cook, store food and for all members of the house to eat properly.",
+          "value":"GREEN"}]
+    },
+    "phone": {
+      "type": "array",
+      "title": {
+        "es": "Communication"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/17-1.jpg", 
+          "description":"All adult members in my household have access to an affordable mobile phone and internet access at home.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/17-2.jpg", 
+          "description":"In my household we have access to mobile phones or the internet but the costs are a problem for us.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/17-3.jpg", 
+          "description":"We have no access either to a phone or internet in the house.",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/17-1.jpg", 
+          "description":"All adult members in my household have access to an affordable mobile phone and internet access at home.",
+          "value":"GREEN"}]
+    },
+    "security": {
+      "type": "array",
+      "title": {
+        "es": "Security"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/18-1.jpg", 
+          "description":"We feel safe in the area we live in, and where we work. No member of our household has suffered acts of violence against themselves or their property in the past two years.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/18-2.jpg", 
+          "description":"We feel unsafe in the area we live in or where we work but have not suffered acts of violence.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/18-3.jpg", 
+          "description":"In the past year someone in my household has suffered acts of violence and we feel unsafe in the area we live or work in.",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/18-1.jpg", 
+          "description":"We feel safe in the area we live in, and where we work. No member of our household has suffered acts of violence against themselves or their property in the past two years.",
+          "value":"GREEN"}]
+    },
+    "readAndWrite": {
+      "type": "array",
+      "title": {
+        "es": "Literacy- Knows how to read and write in English"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/31-1.jpg", 
+          "description":"Everyone in my household can read and write at appropriate levels in English, including knowledge of writing for work level.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/31-2.jpg", 
+          "description":"Everyone in my household can read and write well, but need help with more complex writing styles or more difficult reading.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/31-3.jpg", 
+          "description":"Some members of my household do not read and write English at an appropriate level.",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/31-1.jpg", 
+          "description":"Everyone in my household can read and write at appropriate levels in English, including knowledge of writing for work level.",
+          "value":"GREEN"}]
+    },
+    "middleEducation": {
+      "type": "array",
+      "title": {
+        "es": "Children enrolled and attend school"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/32-1.jpg", 
+          "description":"All members in my household completed school and all children are on track to obtain their GCSEs. If 16-18 they are either at college or apprenticeship/traineeship.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/32-2.jpg", 
+          "description":"Some are at risk of not completing school or not getting a minimum of C in English and Maths GCSEs or not staying in college or their apprenticeship/traineeship.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/32-3.jpg", 
+          "description":"There are members of my household that should be attending school but they are not. 16-18 year olds are not in college or apprenticeship/traineeship.",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/32-1.jpg", 
+          "description":"All members in my household completed school and all children are on track to obtain their GCSEs. If 16-18 they are either at college or apprenticeship/traineeship.",
+          "value":"GREEN"}]
+    },
+    "socialCapital": {
+      "type": "array",
+      "title": {
+        "es": "Part of group activities"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/42-1.jpg", 
+          "description":"Everyone in my household is actively involved in groups where they can express themselves and feel supported.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/42-2.jpg", 
+          "description":"Everyone in my household occasionally attends these groups but they do not meet up or attend often and are not well networked in the groups.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/42-3.jpg", 
+          "description":"There is someone in my household who does not belong to any group (e.g neighbourhood group, church, commmittees, parent groups, social groups).",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/42-1.jpg", 
+          "description":"Everyone in my household is actively involved in groups where they can express themselves and feel supported.",
+          "value":"GREEN"}]
+    },
+    "informationAccess": {
+      "type": "array",
+      "title": {
+        "es": "Access to information"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/37-1.jpg", 
+          "description":"We are able to access relevant information and access a range of media to suit all of our needs.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/37-2.jpg", 
+          "description":"We can access relevant information sometimes - not always what we need /when we need it? OR we use different media but more for entertainment purposes than gaining relevant information.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/37-3.jpg", 
+          "description":"None or very restricted access to (relevant) information OR different media sources.",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/37-1.jpg", 
+          "description":"We are able to access relevant information and access a range of media to suit all of our needs.",
+          "value":"GREEN"}]
+    },
+    "influenceInPublicSector": {
+      "type": "array",
+      "title": {
+        "es": "Influence on the public sector"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/43-1.jpg", 
+          "description":"In my household when we see problems in our community, we know who to talk to (for example going to local MP or councillors or organising a petition).",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/43-2.jpg", 
+          "description":"In my household we do not take action to solve problems in my community.  We only participate if someone else organises it.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/43-3.jpg", 
+          "description":"In my household we do not know how to contact local authorities OR we think there’s no point in getting involved because nothing ever changes.",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/43-1.jpg", 
+          "description":"In my household when we see problems in our community, we know who to talk to (for example going to local MP or councillors or organising a petition).",
+          "value":"GREEN"}]
+    },
+    "awarenessOfNeeds": {
+      "type": "array",
+      "title": {
+        "es": "Awareness of needs: Life map"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/46-1.jpg", 
+          "description":"In my household we usually reflect about our present situation, and imagine how it could be different. We have concrete targets for the short, medium and long term and know how to reach them.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/46-2.jpg", 
+          "description":"In my household we can imagine where we want to be in the future but not sure how to get there, if at all", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/46-3.jpg", 
+          "description":"In my household we can’t imagine changing things OR We’d like things to be different but what’s the point?",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/46-1.jpg", 
+          "description":"In my household we usually reflect about our present situation, and imagine how it could be different. We have concrete targets for the short, medium and long term and know how to reach them.",
+          "value":"GREEN"}]
+    },
+    "selfEsteem": {
+      "type": "array",
+      "title": {
+        "es": "Self Confidence and self esteem"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/47-1.jpg", 
+          "description":"Most or all of the family have a strong levels of self-confidence and self-esteem in a variety of situations.",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/47-2.jpg", 
+          "description":"Some but not all of the family have good self esteem or self confidence but in general don’t like being out of our comfort zone.", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/47-3.jpg", 
+          "description":"Most of our family find it difficult to be self-confident and lack self-esteem; we don’t enter situations out of our comfort zone.",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/47-1.jpg", 
+          "description":"Most or all of the family have a strong levels of self-confidence and self-esteem in a variety of situations.",
+          "value":"GREEN"}]
+    },
+    "autonomyDecisions": {
+      "type": "array",
+      "title": {
+        "es": "Autonomy to make decisions"
+      },
+      "items": {
+        "type": "object",
+        "enum": [
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/54-1.jpg", 
+          "description":"In my household we are all involved in decision-making processes and have a voice in them. Everyone makes decisions independently in the areas that affect them directly",
+          "value":"GREEN"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/54-2.jpg", 
+          "description":"Only some members of my household are decision makers and restrict input even when the matter affects someone directly", 
+          "value":"YELLOW"},
+          {"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/54-3.jpg", 
+          "description":"In my household one person makes the decisions and the rest have to live with it.",
+          "value":"RED"}
+          
+        ]
+      },
+      "uniqueItems": true,
+      "default": [{"url":"https://s3.eu-west-2.amazonaws.com/py.org.fundacionparaguaya.psp.images/surveys/indicators/54-1.jpg", 
+          "description":"In my household we are all involved in decision-making processes and have a voice in them. Everyone makes decisions independently in the areas that affect them directly",
+          "value":"GREEN"}]
+    }
+  }
+  
+}

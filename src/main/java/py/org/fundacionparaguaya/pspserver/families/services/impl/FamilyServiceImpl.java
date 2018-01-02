@@ -1,6 +1,8 @@
 package py.org.fundacionparaguaya.pspserver.families.services.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.springframework.data.jpa.domain.Specifications.where;
+import static py.org.fundacionparaguaya.pspserver.families.specifications.FamilySpecification.byFilter;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -14,18 +16,20 @@ import org.springframework.stereotype.Service;
 
 import py.org.fundacionparaguaya.pspserver.common.exceptions.UnknownResourceException;
 import py.org.fundacionparaguaya.pspserver.families.dtos.FamilyDTO;
+import py.org.fundacionparaguaya.pspserver.families.dtos.FamilyFilterDTO;
 import py.org.fundacionparaguaya.pspserver.families.entities.FamilyEntity;
 import py.org.fundacionparaguaya.pspserver.families.entities.PersonEntity;
 import py.org.fundacionparaguaya.pspserver.families.mapper.FamilyMapper;
 import py.org.fundacionparaguaya.pspserver.families.repositories.FamilyRepository;
 import py.org.fundacionparaguaya.pspserver.families.services.FamilyService;
+import py.org.fundacionparaguaya.pspserver.network.dtos.ApplicationDTO;
+import py.org.fundacionparaguaya.pspserver.network.dtos.OrganizationDTO;
 import py.org.fundacionparaguaya.pspserver.network.entities.OrganizationEntity;
 import py.org.fundacionparaguaya.pspserver.network.repositories.OrganizationRepository;
+import py.org.fundacionparaguaya.pspserver.security.dtos.UserDetailsDTO;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.NewSnapshot;
 import py.org.fundacionparaguaya.pspserver.system.entities.CityEntity;
 import py.org.fundacionparaguaya.pspserver.system.entities.CountryEntity;
-import py.org.fundacionparaguaya.pspserver.system.mapper.CityMapper;
-import py.org.fundacionparaguaya.pspserver.system.mapper.CountryMapper;
 import py.org.fundacionparaguaya.pspserver.system.repositories.CityRepository;
 import py.org.fundacionparaguaya.pspserver.system.repositories.CountryRepository;
 
@@ -38,10 +42,6 @@ public class FamilyServiceImpl implements FamilyService {
 
     private final FamilyRepository familyRepository;
 
-    private final CountryMapper countryMapper;
-
-    private final CityMapper cityMapper;
-
     private final CountryRepository countryRepository;
 
     private final CityRepository cityRepository;
@@ -50,13 +50,11 @@ public class FamilyServiceImpl implements FamilyService {
 
     private static final String SPACE = " ";
 
-    public FamilyServiceImpl(FamilyRepository familyRepository, FamilyMapper familyMapper, CountryMapper countryMapper,
-            CityMapper cityMapper, CountryRepository countryRepository, CityRepository cityRepository,
+    public FamilyServiceImpl(FamilyRepository familyRepository, FamilyMapper familyMapper,
+    		CountryRepository countryRepository, CityRepository cityRepository,
             OrganizationRepository organizationRepository) {
         this.familyRepository = familyRepository;
         this.familyMapper = familyMapper;
-        this.countryMapper = countryMapper;
-        this.cityMapper = cityMapper;
         this.countryRepository = countryRepository;
         this.cityRepository = cityRepository;
         this.organizationRepository = organizationRepository;
@@ -119,7 +117,7 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-   public List<FamilyDTO> getFamiliesByFilter(Long organizationId, Long countryId, Long cityId, String freeText) {
+    public List<FamilyDTO> getFamiliesByFilter(Long organizationId, Long countryId, Long cityId, String freeText) {
 		
 	  	List<FamilyEntity> listFamilies = new ArrayList<FamilyEntity>();
 	  	
@@ -128,15 +126,19 @@ public class FamilyServiceImpl implements FamilyService {
 		}else{
 			listFamilies = familyRepository.findByNameContainingIgnoreCase(freeText);
 		}
-	  	
-		List<FamilyDTO> response = new ArrayList<FamilyDTO>();
 		
-		for (FamilyEntity familyEntity : listFamilies) {
-			response.add(familyMapper.entityToDto(familyEntity));
-		}
-		
-		return response;
+		return familyMapper.entityListToDtoList(listFamilies);
 	}
+    
+    @Override
+    public List<FamilyDTO> listFamilies(FamilyFilterDTO filter, UserDetailsDTO userDetails) {
+        loadFilterByDetails(filter, userDetails);
+		
+		List<FamilyEntity> entityList = familyRepository.findAll(where(byFilter(filter)));
+		
+		return familyMapper.entityListToDtoList(entityList);
+	}
+    
     @Override
     public FamilyEntity createFamilyFromSnapshot(NewSnapshot snapshot, String code, PersonEntity person) {
         FamilyEntity newFamily = new FamilyEntity();
@@ -156,10 +158,34 @@ public class FamilyServiceImpl implements FamilyService {
         if(snapshot.getOrganizationId()!=null) {
             OrganizationEntity organization = organizationRepository.findOne(snapshot.getOrganizationId());
             newFamily.setOrganization(organization);
+            newFamily.setApplication(organization.getApplication());
         }
 
         newFamily = familyRepository.save(newFamily);
 
         return newFamily;
+    }
+    
+    @Override
+    public Long countFamiliesByDetails(UserDetailsDTO userDetails) {
+        return familyRepository.count(byFilter(buildFilterByDetails(userDetails)));
+    }
+    
+    private FamilyFilterDTO buildFilterByDetails(UserDetailsDTO userDetails) {
+        FamilyFilterDTO filter = new FamilyFilterDTO();
+        loadFilterByDetails(filter, userDetails);
+        return filter;
+    }
+    
+    private void loadFilterByDetails(FamilyFilterDTO target, UserDetailsDTO userDetails) {
+        Long applicationId = Optional.ofNullable(userDetails.getApplication())
+                .orElse(new ApplicationDTO()).getId();
+        
+        Long organizationId = Optional.ofNullable(Optional.ofNullable(userDetails.getOrganization())
+                .orElse(new OrganizationDTO()).getId())
+                .orElse(target.getOrganizationId());
+        
+        target.setApplicationId(applicationId);
+        target.setOrganizationId(organizationId);
     }
 }

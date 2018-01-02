@@ -188,5 +188,14 @@
         <sqlFile path="sql/2017-12-19T10:10.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+	  <!-- Insert cities in the cities table -->
+    <changeSet id="2017-12-27T16:50" author="mgonzalez">
+        <sqlFile path="sql/2017-12-27T16:50.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <!-- Fixes FK to countries in organizations -->
+    <changeSet id="2017-12-28T16:00" author="rvillalba">
+        <sqlFile path="sql/2017-12-28T16:00.sql" relativeToChangelogFile="true"/>
+    </changeSet>
 
 </databaseChangeLog>

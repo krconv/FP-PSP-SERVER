@@ -1,8 +1,9 @@
 package py.org.fundacionparaguaya.pspserver.web.rest;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.modelmapper.TypeToken;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +11,18 @@ import py.org.fundacionparaguaya.pspserver.common.exceptions.NotFoundException;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.NewSnapshot;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.Snapshot;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.SnapshotIndicators;
+import py.org.fundacionparaguaya.pspserver.surveys.dtos.SurveyData;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotService;
 
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by rodrigovillalba on 10/5/17.
@@ -42,41 +48,82 @@ public class SnapshotController {
         return ResponseEntity.ok(snapshots);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE, path="/filter")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE, path = "/filter")
     @io.swagger.annotations.ApiOperation(value = "Retrieves a filtered set of snapshots", notes = "A `GET` request with filter parameters will return a list of snapshots matching that criteria.", response = List.class, tags = {})
     @io.swagger.annotations.ApiResponses(value = {
-            @io.swagger.annotations.ApiResponse(code = 200, message = "Snapshots matching filter criteria.", response = Snapshot.class, responseContainer="List")
-    })
-    public ResponseEntity filterSnapshots(@RequestParam(value = "indicators", required = false) String indicators,
-                                          @RequestParam(value = "organizationId", required = false) Long organizationId,
-                                          @RequestParam(value = "applicationId", required = false) Long applicationId,
-                                          @RequestParam(value = "countryId", required = false) Long countryId,
-                                          @RequestParam(value = "cityId", required = false) Long cityId){
-        Map<String, List<String>> indicatorsMap = new HashMap<String, List<String>>();
-        if (indicators != null) {
-            indicatorsMap = new Gson().fromJson(indicators, new TypeToken<Map<String, List<String>>>(){}.getType());
-        }
-        List<Snapshot> snapshots = snapshotService.filter(indicatorsMap, organizationId, applicationId, countryId, cityId);
-
+            @io.swagger.annotations.ApiResponse(code = 200, message = "Snapshots matching filter criteria.", response = Snapshot.class, responseContainer = "List") })
+    public ResponseEntity<List<Snapshot>> filterSnapshots(
+            @RequestParam(value = "indicators", required = false) String indicators,
+            @RequestParam(value = "organizationId", required = false) Long organizationId,
+            @RequestParam(value = "applicationId", required = false) Long applicationId,
+            @RequestParam(value = "countryId", required = false) Long countryId,
+            @RequestParam(value = "cityId", required = false) Long cityId) {
+        List<Snapshot> snapshots = snapshotService.filter(toMap(indicators), organizationId, applicationId, countryId, cityId);
         return ResponseEntity.ok(snapshots);
     }
 
-    @GetMapping(produces = "text/csv", path="/filter/csv")
+    @GetMapping(produces = "text/csv", path = "/filter/csv")
     @io.swagger.annotations.ApiOperation(value = "Retrieves a filtered set of snapshots", notes = "A `GET` request with filter parameters will return a list of snapshots matching that criteria.", response = List.class, tags = {})
     @io.swagger.annotations.ApiResponses(value = {
-            @io.swagger.annotations.ApiResponse(code = 200, message = "Snapshots matching filter criteria.", response = Snapshot.class)
-    })
-    public String filterSnapshotsCSV(@RequestParam(value = "indicators", required = false) String indicators,
-                                     @RequestParam(value = "organizationId", required = false) Long organizationId,
-                                     @RequestParam(value = "applicationId", required = false) Long applicationId,
-                                     @RequestParam(value = "countryId", required = false) Long countryId,
-                                     @RequestParam(value = "cityId", required = false) Long cityId) {
-        Map<String, List<String>> indicatorsMap = new HashMap<String, List<String>>();
-        if (indicators != null) {
-            indicatorsMap = new Gson().fromJson(indicators, new TypeToken<Map<String, List<String>>>(){}.getType());
+            @io.swagger.annotations.ApiResponse(code = 200, message = "Snapshots matching filter criteria.", response = Snapshot.class, responseContainer = "List") })
+    public String filterSnapshotsCSV(
+            @RequestParam(value = "indicators", required = false) String indicators,
+            @RequestParam(value = "organizationId", required = false) Long organizationId,
+            @RequestParam(value = "applicationId", required = false) Long applicationId,
+            @RequestParam(value = "countryId", required = false) Long countryId,
+            @RequestParam(value = "cityId", required = false) Long cityId) {
+        List<Snapshot> snapshots = snapshotService.filter(toMap(indicators), organizationId, applicationId, countryId, cityId);
+        List<String> headers = new ArrayList<String>();
+        headers.add("id");
+        headers.add("createdAt");
+        List<Map<String, String>> rows = new LinkedList<Map<String, String>>();
+
+        for (Snapshot snapshot : snapshots) {
+            Map<String, String> row = new HashMap<String, String>();
+            row.put("id", snapshot.getSurveyId().toString());
+            row.put("createdAt", snapshot.getCreatedAt());
+
+            row.putAll(toRow(headers, snapshot.getPersonalSurveyData()));
+            row.putAll(toRow(headers, snapshot.getEconomicSurveyData()));
+            row.putAll(toRow(headers, snapshot.getIndicatorSurveyData()));
+
+            rows.add(row);
         }
 
-        return snapshotService.filterCSV(indicatorsMap, organizationId, applicationId, countryId, cityId);
+        StringWriter buffer = new StringWriter();
+        headers.stream().forEachOrdered((h) -> buffer.write(h + ","));
+        buffer.append('\n');
+
+        for (Map<String, String> row : rows) {
+            headers.stream().forEachOrdered((h) -> buffer.write(row.getOrDefault(h, "") + ","));
+            buffer.append('\n');
+        }
+
+        return buffer.toString();
+    }
+
+    private Map<String, List<String>> toMap(String json) {
+        if (json == null) {
+            return null;
+        }
+        return new Gson().fromJson(json, new TypeToken<Map<String, List<String>>>(){}.getType());
+    }
+
+    private Map<String, String> toRow(List<String> headers, SurveyData data) {
+        if (data == null) {
+            return new HashMap<String, String>();
+        }
+
+        Map<String, String> row = new HashMap<String, String>();
+        Set<String> cols = data.keySet();
+        for (String col : cols) {
+            if (!headers.contains(col)) {
+                headers.add(col);
+            }
+            Object value = data.get(col);
+            row.put(col, value != null ? StringEscapeUtils.escapeCsv(value.toString()) : "");
+        }
+        return row;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -100,17 +147,15 @@ public class SnapshotController {
         SnapshotIndicators snapshot = snapshotService.getSnapshotIndicators(snapshotId);
         return ResponseEntity.ok(snapshot);
     }
-    
-    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE, path="/family")
-    @io.swagger.annotations.ApiOperation(value = "Retrieves all snapshots indicators related with a family", 
-    	notes = "A `GET` request with a survey parameter will return a list of snapshots indicators for the that family.", response = List.class, tags = {})
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE, path = "/family")
+    @io.swagger.annotations.ApiOperation(value = "Retrieves all snapshots indicators related with a family", notes = "A `GET` request with a survey parameter will return a list of snapshots indicators for the that family.", response = List.class, tags = {})
     @io.swagger.annotations.ApiResponses(value = {
-            @io.swagger.annotations.ApiResponse(code = 200, message = "List of available snapshots", response = Snapshot.class, responseContainer="List")
-    })
-    public ResponseEntity<List<SnapshotIndicators>> getSnapshotsIndicatorsByFamily(@RequestParam(value = "family_id", required = false) Long familiyId) {
+            @io.swagger.annotations.ApiResponse(code = 200, message = "List of available snapshots", response = Snapshot.class, responseContainer = "List") })
+    public ResponseEntity<List<SnapshotIndicators>> getSnapshotsIndicatorsByFamily(
+            @RequestParam(value = "family_id", required = false) Long familiyId) {
         List<SnapshotIndicators> snapshots = snapshotService.getSnapshotIndicatorsByFamily(familiyId);
         return ResponseEntity.ok(snapshots);
     }
-    
 
 }
