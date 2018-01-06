@@ -318,76 +318,23 @@
             }
 
             $.ajax({
-                url: server + "families"
+                url: server + "families/filter",
+                data: filters
             }).then((data) => {
-                var families = data.filter((family) => {
-                    for (var filter in filters) {
-                        if (filters[filter]) {
-                            switch (filter) {
-                                case "country":
-                                    if (family.country.id != filters[filter])
-                                        return false;
-                                case "city":
-                                    if (family.city.id != filters[filter])
-                                        return false;
-                                case "organization":
-                                    if (family.organization.id != filters[filter])
-                                        return false;
-                            }
-                        }
-                    }
-                    return true;
-                });
-                $.ajax({
-                    url: server + "surveys"
-                }).then((data) => {
-                    var surveys = data;
-                    for (var i = 0; i < surveys.length; i++) {
-                        for (var j = 0; j < families.length; j++) {
-                            (function (survey, family) {
-                                $.ajax({
-                                    url: server + "snapshots",
-                                    data: {
-                                        "survey_id": survey.id,
-                                        "family_id": family.familyId
-                                    }
-                                }).then(function (data) {
-                                    var snapshots = data;
-                                    for (var k = 0; k < snapshots.length; k++) {
-                                        (function (survey, family, snapshot) {
-                                            var include = false;
-                                            for (var indicator in filters.indicators) {
-                                                if (indicator in snapshot.indicator_survey_data || indicator == "") {
-                                                    if (!filters.indicators[indicator])
-                                                        include = true;
-                                                    else
-                                                        for (var i = 0; i < filters.indicators[indicator].length; i++)
-                                                            if (filters.indicators[indicator][i] == ""
-                                                                || filters.indicators[indicator][i] == snapshot.indicator_survey_data[indicator])
-                                                                include = true;
-                                                }
-                                            }
-                                            if (include)
-                                                addMarker(getFamilyPosition(family), buildInfo(family, snapshot));
-                                        })(survey, family, snapshots[k]);
-                                    }
-                                });
-                            })(surveys[i], families[j]);
-                        }
-                    }
-                });
+                for (var snapshot in snapshots) {
+                    addMarker(getFamilyPosition(family), buildInfo(family, snapshot));
+                }
             });
         }
-        function getFamilyPosition(family) {
-            var raw = family.locationPositionGps.split(",").map(parseFloat);
+        function getSnapshotPosition(snapshot) {
+            var raw = snapshot.snapshot_economic_data.familyUbication.split(",").map(parseFloat);
             return { lat: raw[0], lng: raw[1] };
         }
-        function buildInfo(family, snapshot) {
+        function buildInfo(snapshot) {
             var info = "";
             info += '<div class="snapshotInfo">';
             info += '<div class="title" style="font-size:larger; font-weight:bolder">Snapshot on XX/XX/XXXX</div>';
             info += '<table>';
-            info += '<tr><th>Family</th><td>' + family.name + '</td></tr>';
             info += '<tr><th>Indicators</th><td><table style="margin: 5px">';
             for (indicator in snapshot.indicator_survey_data) {
                 info += '<tr><th>' + indicator + '</th>';
