@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.NotFoundException;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.NewSnapshot;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.Snapshot;
+import py.org.fundacionparaguaya.pspserver.surveys.dtos.SnapshotFilterDTO;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.SnapshotIndicators;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.SurveyData;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotService;
@@ -94,7 +95,9 @@ public class SnapshotController {
                 final Long cityId
         ) {
         List<Snapshot> snapshots = snapshotService.filter(
-            toMap(indicators), organizationId, applicationId, countryId, cityId
+            new SnapshotFilterDTO(
+                indicators, organizationId, applicationId, countryId, cityId
+            )
         );
         return ResponseEntity.ok(snapshots);
     }
@@ -131,7 +134,9 @@ public class SnapshotController {
             final Long cityId
     ) {
         List<Snapshot> snapshots = snapshotService.filter(
-            toMap(indicators), organizationId, applicationId, countryId, cityId
+            new SnapshotFilterDTO(
+                indicators, organizationId, applicationId, countryId, cityId
+            )
         );
         List<String> headers = new ArrayList<String>();
         headers.add("id");
@@ -162,13 +167,6 @@ public class SnapshotController {
         }
 
         return buffer.toString();
-    }
-
-    private Map<String, List<String>> toMap(String json) {
-        if (json == null) {
-            return null;
-        }
-        return new Gson().fromJson(json, new TypeToken<Map<String, List<String>>>(){}.getType());
     }
 
     private Map<String, String> toRow(List<String> headers, SurveyData data) {

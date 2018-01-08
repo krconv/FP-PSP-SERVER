@@ -133,19 +133,13 @@ public class SnapshotServiceImpl implements SnapshotService {
     }
 
     @Override
-    public List<Snapshot> filter(
-            Map<String, List<String>> indicators,
-            Long organizationId,
-            Long applicationId,
-            Long countryId,
-            Long cityId
-        ) {
-        List<Long> familiesIds = filterFamilies(
-            organizationId, applicationId, countryId, cityId
-        );
+    public List<Snapshot> filter(SnapshotFilterDTO filter)
+        List<Long> familiesIds = filterFamilies(filter);
 
         return economicRepository.findAll(Specifications
-                .where(SnapshotSpecifications.hasIndicators(indicators))
+                .where(SnapshotSpecifications.hasIndicators(
+                    filter.getIndicators()
+                ))
                 .and(SnapshotSpecifications.forFamilies(familiesIds)))
                 .stream()
                 .map(economicMapper::entityToDto)
@@ -153,22 +147,23 @@ public class SnapshotServiceImpl implements SnapshotService {
 
     }
 
-    private List<Long> filterFamilies(
-            Long organizationId,
-            Long applicationId,
-            Long countryId,
-            Long cityId
-        ) {
-        if (organizationId == null && applicationId == null 
-                && countryId == null && cityId == null) {
+    private List<Long> filterFamilies(SnapshotFilterDTO filter) {
+        if (filter.getOrganizationId() == null 
+                && filter.getApplicationId() == null 
+                && filter.getCountryId() == null 
+                && filter.getCityId() == null) {
             return null;
         }
 
         return familyRepository.findAll(Specifications
-                .where(FamilySpecifications.belongsToOrganization(organizationId))
-                .and(FamilySpecifications.belongsToApplication(applicationId))
-                .and(FamilySpecifications.inCountry(countryId))
-                .and(FamilySpecifications.inCity(cityId)))
+                .where(FamilySpecifications.belongsToOrganization(
+                    filter.getOrganizationId()
+                ))
+                .and(FamilySpecifications.belongsToApplication(
+                    filter.getApplicationId()
+                ))
+                .and(FamilySpecifications.inCountry(filter.getCountryId()))
+                .and(FamilySpecifications.inCity(filter.getCityId())))
                 .stream()
                 .map((f) -> f.getFamilyId())
                 .collect(Collectors.toList());
