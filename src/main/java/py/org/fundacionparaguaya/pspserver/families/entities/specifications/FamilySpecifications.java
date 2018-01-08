@@ -9,26 +9,39 @@ import org.springframework.data.jpa.domain.Specification;
 import py.org.fundacionparaguaya.pspserver.families.entities.FamilyEntity;
 
 public final class FamilySpecifications {
-  public static Specification<FamilyEntity> belongsToOrganization(Long organizationId) {
+  private FamilySpecifications() {}
+
+  public static Specification<FamilyEntity> belongsToOrganization(
+      final Long organizationId
+    ) {
     return attributeHasId("organization", organizationId);
   }
   
-  public static Specification<FamilyEntity> belongsToApplication(Long applicationId) {
+  public static Specification<FamilyEntity> belongsToApplication(
+      final Long applicationId
+    ) {
     return attributeHasId("application", applicationId);
   }
 
-  public static Specification<FamilyEntity> inCountry(Long countryId) {
+  public static Specification<FamilyEntity> inCountry(final Long countryId) {
     return attributeHasId("country", countryId);
   }
 
-  public static Specification<FamilyEntity> inCity(Long cityId) {
+  public static Specification<FamilyEntity> inCity(final Long cityId) {
     return attributeHasId("city", cityId);
   }
 
-  private static Specification<FamilyEntity> attributeHasId(String attribute, Long id) {
+  private static Specification<FamilyEntity> attributeHasId(
+      final String attribute,
+      final Long id
+    ) {
     return new Specification<FamilyEntity>() {
-      public Predicate toPredicate(Root<FamilyEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        if (id == null) return cb.isNotNull(root.get("familyId"));
+      public Predicate toPredicate(
+          final Root<FamilyEntity> root,
+          final CriteriaQuery<?> query,
+          final CriteriaBuilder cb
+        ) {
+        if (id == null) { return cb.isNotNull(root.get("familyId")); }
         Join<Object, Object> secondary = root.join(attribute);
         return cb.equal(secondary.get("id"), id);
       }

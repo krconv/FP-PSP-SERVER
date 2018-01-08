@@ -16,7 +16,13 @@ public interface SnapshotService {
 
     List<Snapshot> find(Long surveyId, Long familiyId);
     
-    List<Snapshot> filter(Map<String, List<String>> indicators, Long organizationId, Long applicationId, Long countryId, Long cityId);
+    List<Snapshot> filter(
+        Map<String, List<String>> indicators,
+        Long organizationId,
+        Long applicationId,
+        Long countryId,
+        Long cityId
+    );
 
     SnapshotIndicators getSnapshotIndicators(Long snapshotId);
 

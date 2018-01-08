@@ -13,9 +13,18 @@ import org.springframework.data.jpa.domain.Specification;
 import py.org.fundacionparaguaya.pspserver.surveys.entities.SnapshotEconomicEntity;
 
 public final class SnapshotSpecifications {
-  public static Specification<SnapshotEconomicEntity> hasIndicator(String indicator, List<String> values) {
+  private SnapshotSpecifications() {}
+
+  public static Specification<SnapshotEconomicEntity> hasIndicator(
+      final String indicator, 
+      final List<String> values
+    ) {
     return new Specification<SnapshotEconomicEntity>() {
-      public Predicate toPredicate(Root<SnapshotEconomicEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+      public Predicate toPredicate(
+          final Root<SnapshotEconomicEntity> root,
+          final CriteriaQuery<?> query,
+          final CriteriaBuilder cb
+        ) {
         if (indicator == null || indicator.length() == 0) {
           return cb.isNotNull(root.get("id")); // any
         }
@@ -34,32 +43,51 @@ public final class SnapshotSpecifications {
     };
   }
 
-  public static Specification<SnapshotEconomicEntity> hasIndicators(Map<String, List<String>> indicators) {
+  public static Specification<SnapshotEconomicEntity> hasIndicators(
+      final Map<String, 
+      final List<String>> indicators
+    ) {
     return new Specification<SnapshotEconomicEntity>() {
-      public Predicate toPredicate(Root<SnapshotEconomicEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+      public Predicate toPredicate(
+          final Root<SnapshotEconomicEntity> root,
+          final CriteriaQuery<?> query,
+          final CriteriaBuilder cb
+        ) {
         if (indicators == null || indicators.isEmpty()) {
           return cb.isNotNull(root.get("id")); // any
         }
-        
+
         List<Predicate> predicates = new ArrayList<Predicate>();
         for (String indicator : indicators.keySet()) {
-          predicates.add(hasIndicator(indicator, indicators.get(indicator)).toPredicate(root, query, cb));
+          predicates.add(hasIndicator(
+            indicator,
+            indicators.get(indicator)).toPredicate(root, query, cb)
+          );
         }
         return cb.or(predicates.toArray(new Predicate[predicates.size()]));
       }
     };
   }
 
-  public static Specification<SnapshotEconomicEntity> forFamilies(List<Long> familyIds) {
+  public static Specification<SnapshotEconomicEntity> forFamilies(
+      final List<Long> familyIds
+    ) {
     return new Specification<SnapshotEconomicEntity>() {
-      public Predicate toPredicate(Root<SnapshotEconomicEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+      public Predicate toPredicate(
+          final Root<SnapshotEconomicEntity> root,
+          final CriteriaQuery<?> query,
+          final CriteriaBuilder cb
+        ) {
         if (familyIds == null) {
           return cb.isNotNull(root.get("id")); // any
         }
 
         List<Predicate> predicates = new ArrayList<Predicate>();
         for (Long familyId : familyIds) {
-          predicates.add(cb.equal(root.join("family").get("familyId"), familyId));
+          predicates.add(cb.equal(
+            root.join("family").get("familyId"),
+            familyId
+          ));
         }
         return cb.or(predicates.toArray(new Predicate[predicates.size()]));
       }

@@ -133,8 +133,16 @@ public class SnapshotServiceImpl implements SnapshotService {
     }
 
     @Override
-    public List<Snapshot> filter(Map<String, List<String>> indicators, Long organizationId, Long applicationId, Long countryId, Long cityId) {
-        List<Long> familiesIds = filterFamilies(organizationId, applicationId, countryId, cityId);
+    public List<Snapshot> filter(
+            Map<String, List<String>> indicators,
+            Long organizationId,
+            Long applicationId,
+            Long countryId,
+            Long cityId
+        ) {
+        List<Long> familiesIds = filterFamilies(
+            organizationId, applicationId, countryId, cityId
+        );
 
         return economicRepository.findAll(Specifications
                 .where(SnapshotSpecifications.hasIndicators(indicators))
@@ -145,8 +153,14 @@ public class SnapshotServiceImpl implements SnapshotService {
 
     }
 
-    private List<Long> filterFamilies(Long organizationId, Long applicationId, Long countryId, Long cityId) {
-        if (organizationId == null && applicationId == null && countryId == null && cityId == null) {
+    private List<Long> filterFamilies(
+            Long organizationId,
+            Long applicationId,
+            Long countryId,
+            Long cityId
+        ) {
+        if (organizationId == null && applicationId == null 
+                && countryId == null && cityId == null) {
             return null;
         }
 

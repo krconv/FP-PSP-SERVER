@@ -48,17 +48,54 @@ public class SnapshotController {
         return ResponseEntity.ok(snapshots);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE, path = "/filter")
-    @io.swagger.annotations.ApiOperation(value = "Retrieves a filtered set of snapshots", notes = "A `GET` request with filter parameters will return a list of snapshots matching that criteria.", response = List.class, tags = {})
+    @GetMapping(
+        produces = MediaType.APPLICATION_JSON_UTF8_VALUE, 
+        path = "/filter"
+    )
+    @io.swagger.annotations.ApiOperation(
+        value = "Retrieves a filtered set of snapshots", 
+        notes = "A `GET` request with filter parameters will return a"
+                + "list of snapshots matching that criteria.", 
+        response = List.class, 
+        tags = {}
+    )
     @io.swagger.annotations.ApiResponses(value = {
-            @io.swagger.annotations.ApiResponse(code = 200, message = "Snapshots matching filter criteria.", response = Snapshot.class, responseContainer = "List") })
+            @io.swagger.annotations.ApiResponse(
+                code = 200, 
+                message = "Snapshots matching filter criteria.", 
+                response = Snapshot.class, 
+                responseContainer = "List"
+            ) 
+        })
+    /**
+     * Filters snapshots by the given criteria.
+     * @param indicators A JSON formated string with the indicators to look for, 
+     *      along with their possible, or null to exclude this parameter.
+     * @param organizationId The ID of the organization to look for, or null
+     *      to exclude this parameter.
+     * @param applicationId The ID of the application to look for, or null to
+     *      exclude this parameter.
+     * @param countryId The ID of the country to look for, or null to exclude
+     *      this parameter.
+     * @param cityId The ID of the city to look for, or null to exclude this
+     *      parameter.
+     * @return The snapshots which match all of the included criteria.
+     */
     public ResponseEntity<List<Snapshot>> filterSnapshots(
-            @RequestParam(value = "indicators", required = false) String indicators,
-            @RequestParam(value = "organizationId", required = false) Long organizationId,
-            @RequestParam(value = "applicationId", required = false) Long applicationId,
-            @RequestParam(value = "countryId", required = false) Long countryId,
-            @RequestParam(value = "cityId", required = false) Long cityId) {
-        List<Snapshot> snapshots = snapshotService.filter(toMap(indicators), organizationId, applicationId, countryId, cityId);
+            @RequestParam(value = "indicators", required = false) 
+                final String indicators,
+            @RequestParam(value = "organizationId", required = false) 
+                final Long organizationId,
+            @RequestParam(value = "applicationId", required = false) 
+                final Long applicationId,
+            @RequestParam(value = "countryId", required = false) 
+                final Long countryId,
+            @RequestParam(value = "cityId", required = false) 
+                final Long cityId
+        ) {
+        List<Snapshot> snapshots = snapshotService.filter(
+            toMap(indicators), organizationId, applicationId, countryId, cityId
+        );
         return ResponseEntity.ok(snapshots);
     }
 
@@ -66,13 +103,36 @@ public class SnapshotController {
     @io.swagger.annotations.ApiOperation(value = "Retrieves a filtered set of snapshots", notes = "A `GET` request with filter parameters will return a list of snapshots matching that criteria.", response = List.class, tags = {})
     @io.swagger.annotations.ApiResponses(value = {
             @io.swagger.annotations.ApiResponse(code = 200, message = "Snapshots matching filter criteria.", response = Snapshot.class, responseContainer = "List") })
+    /**
+     * Filters snapshots by the given criteria and returns them in CSV format.
+     * @param indicators A JSON formated string with the indicators to look for, 
+     *      along with their possible, or null to exclude this parameter.
+     * @param organizationId The ID of the organization to look for, or null
+     *      to exclude this parameter.
+     * @param applicationId The ID of the application to look for, or null to
+     *      exclude this parameter.
+     * @param countryId The ID of the country to look for, or null to exclude
+     *      this parameter.
+     * @param cityId The ID of the city to look for, or null to exclude this
+     *      parameter.
+     * @return The snapshots which match all of the included criteria in CSV
+     *      format.
+     */
     public String filterSnapshotsCSV(
-            @RequestParam(value = "indicators", required = false) String indicators,
-            @RequestParam(value = "organizationId", required = false) Long organizationId,
-            @RequestParam(value = "applicationId", required = false) Long applicationId,
-            @RequestParam(value = "countryId", required = false) Long countryId,
-            @RequestParam(value = "cityId", required = false) Long cityId) {
-        List<Snapshot> snapshots = snapshotService.filter(toMap(indicators), organizationId, applicationId, countryId, cityId);
+        @RequestParam(value = "indicators", required = false) 
+            final String indicators,
+        @RequestParam(value = "organizationId", required = false) 
+            final Long organizationId,
+        @RequestParam(value = "applicationId", required = false) 
+            final Long applicationId,
+        @RequestParam(value = "countryId", required = false) 
+            final Long countryId,
+        @RequestParam(value = "cityId", required = false) 
+            final Long cityId
+    ) {
+        List<Snapshot> snapshots = snapshotService.filter(
+            toMap(indicators), organizationId, applicationId, countryId, cityId
+        );
         List<String> headers = new ArrayList<String>();
         headers.add("id");
         headers.add("createdAt");
@@ -95,7 +155,9 @@ public class SnapshotController {
         buffer.append('\n');
 
         for (Map<String, String> row : rows) {
-            headers.stream().forEachOrdered((h) -> buffer.write(row.getOrDefault(h, "") + ","));
+            headers.stream().forEachOrdered(
+                (h) -> buffer.write(row.getOrDefault(h, "") + ",")
+            );
             buffer.append('\n');
         }
 
