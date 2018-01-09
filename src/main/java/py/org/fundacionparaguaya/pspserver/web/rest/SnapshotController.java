@@ -1,9 +1,7 @@
 package py.org.fundacionparaguaya.pspserver.web.rest;
 
-import com.google.gson.Gson;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.modelmapper.TypeToken;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -54,17 +51,17 @@ public class SnapshotController {
         path = "/filter"
     )
     @io.swagger.annotations.ApiOperation(
-        value = "Retrieves a filtered set of snapshots", 
+        value = "Retrieves a filtered set of snapshots",
         notes = "A `GET` request with filter parameters will return a"
-                + "list of snapshots matching that criteria.", 
-        response = List.class, 
+                + " list of snapshots matching that criteria.",
+        response = List.class,
         tags = {}
     )
     @io.swagger.annotations.ApiResponses(value = {
             @io.swagger.annotations.ApiResponse(
-                code = 200, 
-                message = "Snapshots matching filter criteria.", 
-                response = Snapshot.class, 
+                code = 200,
+                message = "Snapshots matching filter criteria.",
+                response = Snapshot.class,
                 responseContainer = "List"
             ) 
         })
@@ -103,9 +100,22 @@ public class SnapshotController {
     }
 
     @GetMapping(produces = "text/csv", path = "/filter/csv")
-    @io.swagger.annotations.ApiOperation(value = "Retrieves a filtered set of snapshots", notes = "A `GET` request with filter parameters will return a list of snapshots matching that criteria.", response = List.class, tags = {})
+
+    @io.swagger.annotations.ApiOperation(
+        value = "Retrieves a filtered set of snapshots in CSV format",
+        notes = "A `GET` request with filter parameters will return a"
+                + " list of snapshots matching that criteria.",
+        response = List.class,
+        tags = {}
+    )
     @io.swagger.annotations.ApiResponses(value = {
-            @io.swagger.annotations.ApiResponse(code = 200, message = "Snapshots matching filter criteria.", response = Snapshot.class, responseContainer = "List") })
+            @io.swagger.annotations.ApiResponse(
+                code = 200,
+                message = "Snapshots matching filter criteria.",
+                response = Snapshot.class,
+                responseContainer = "List"
+            ) 
+        })
     /**
      * Filters snapshots by the given criteria and returns them in CSV format.
      * @param indicators A JSON formated string with the indicators to look for, 

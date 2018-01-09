@@ -9,14 +9,14 @@ import org.springframework.data.jpa.domain.Specification;
 import py.org.fundacionparaguaya.pspserver.families.entities.FamilyEntity;
 
 public final class FamilySpecifications {
-  private FamilySpecifications() {}
+  private FamilySpecifications() { }
 
   public static Specification<FamilyEntity> belongsToOrganization(
       final Long organizationId
     ) {
     return attributeHasId("organization", organizationId);
   }
-  
+
   public static Specification<FamilyEntity> belongsToApplication(
       final Long applicationId
     ) {
@@ -41,7 +41,9 @@ public final class FamilySpecifications {
           final CriteriaQuery<?> query,
           final CriteriaBuilder cb
         ) {
-        if (id == null) { return cb.isNotNull(root.get("familyId")); }
+        if (id == null) { 
+          return cb.isNotNull(root.get("familyId")); 
+        }
         Join<Object, Object> secondary = root.join(attribute);
         return cb.equal(secondary.get("id"), id);
       }
