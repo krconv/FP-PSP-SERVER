@@ -100,7 +100,6 @@ public class SnapshotController {
     }
 
     @GetMapping(produces = "text/csv", path = "/filter/csv")
-
     @io.swagger.annotations.ApiOperation(
         value = "Retrieves a filtered set of snapshots in CSV format",
         notes = "A `GET` request with filter parameters will return a"
