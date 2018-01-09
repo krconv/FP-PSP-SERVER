@@ -59,10 +59,13 @@ public class SnapshotControllerTest {
     public void shouldGetAllSnapshotsByFilter() throws Exception {
         List<Snapshot> snapshots = snapshotList();
 
-        Map<String, List<String>> indicators = new HashMap<String, List<String>>();
+        Map<String, List<String>> indicators = 
+                        new HashMap<String, List<String>>();
         indicators.put("properKitchen", Arrays.asList("red"));
 
-        when(service.filter(indicators, 1L, null, 1L, null)).thenReturn(snapshots);
+        when(
+                service.filter(indicators, 1L, null, 1L, null)
+        ).thenReturn(snapshots);
 
         this.mockMvc.perform(get("/api/v1/snapshots/filter")
                 .param("indicators", "{ \"properKitchen\": [\"red\"] }")
@@ -74,7 +77,7 @@ public class SnapshotControllerTest {
                         preprocessResponse(prettyPrint()),
                         responseFields(snapshotsDescriptor)));
     }
-    
+
     @Test
     public void shouldGetAllSnapshotsBySurvey() throws Exception {
         List<Snapshot> snapshots = snapshotList();
