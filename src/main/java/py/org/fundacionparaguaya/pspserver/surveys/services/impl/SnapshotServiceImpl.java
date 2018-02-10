@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +41,7 @@ import py.org.fundacionparaguaya.pspserver.surveys.repositories.SurveyRepository
 import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotIndicatorPriorityService;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotService;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SurveyService;
+import py.org.fundacionparaguaya.pspserver.surveys.specifications.SnapshotEconomicSpecification;
 import py.org.fundacionparaguaya.pspserver.surveys.validation.ValidationResults;
 
 /**
@@ -138,8 +140,12 @@ public class SnapshotServiceImpl implements SnapshotService {
     }
 
     @Override
-    public List<Snapshot> find(Long surveyId, Long familiyId) {
-        return economicRepository.findBySurveyDefinitionId(surveyId).stream().map(economicMapper::entityToDto)
+    public List<Snapshot> find(Long surveyId, Long familyId) {
+        return economicRepository.findAll(Specifications
+                .where(SnapshotEconomicSpecification.forSurvey(surveyId))
+                .and(SnapshotEconomicSpecification.forFamily(familyId)))
+                .stream()
+                .map(economicMapper::entityToDto)
                 .collect(Collectors.toList());
     }
 
