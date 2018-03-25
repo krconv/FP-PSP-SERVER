@@ -165,34 +165,14 @@
 		"autonomyDecisions": {
 			"ui:field": "gallery"
 		},
-
-
 		"familyUbication": {
 			"ui:field": "gmap"
 		},
-		"salaryIncome": {
-			"ui:field": "numberFormat"
-		},
-		"benefitIncome": {
-			"ui:field": "numberFormat"
-		},
-		"pensionIncome": {
-			"ui:field": "numberFormat"
-		},
-		"savingsIncome": {
-			"ui:field": "numberFormat"
-		},
-		"otherIncome": {
-			"ui:field": "numberFormat"
-		},
-		"householdMonthlyOutgoing": {
-			"ui:field": "numberFormat"
-		},
-		"netSuplus": {
-			"ui:field": "numberFormat"
-		},
 		"birthdate": {
 			"ui:field": "date"
+		},
+		"householdMonthlyIncome":{
+			"ui:field": "numberFormat"
 		}
 	},
 

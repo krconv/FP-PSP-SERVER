@@ -33,6 +33,9 @@ public class SnapshotIndicatorPriority implements Serializable {
     @JsonProperty("estimated_date")
     private String estimatedDate;
 
+    @JsonProperty("is_attainment")
+    private Boolean isAttainment;
+
     @ApiModelProperty(value = "Snapshot Indicator Priority's id")
     public Long getId() {
         return id;
@@ -118,6 +121,14 @@ public class SnapshotIndicatorPriority implements Serializable {
         return this;
     }
 
+    public Boolean getIsAttainment() {
+        return isAttainment;
+    }
+
+    public void setIsAttainment(Boolean isAttainment) {
+        this.isAttainment = isAttainment;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -131,6 +142,8 @@ public class SnapshotIndicatorPriority implements Serializable {
         sb.append("    reason: ").append(toIndentedString(reason)).append("\n");
         sb.append("    action: ").append(toIndentedString(action)).append("\n");
         sb.append("    estimatedDate: ").append(toIndentedString(estimatedDate))
+                .append("\n");
+        sb.append("    isAttainment: ").append(toIndentedString(isAttainment))
                 .append("\n");
         sb.append("}");
         return sb.toString();
@@ -164,12 +177,14 @@ public class SnapshotIndicatorPriority implements Serializable {
                 && com.google.common.base.Objects.equal(this.action,
                         that.action)
                 && com.google.common.base.Objects.equal(this.estimatedDate,
-                        that.estimatedDate);
+                        that.estimatedDate)
+                && com.google.common.base.Objects.equal(this.isAttainment,
+                        that.isAttainment);
     }
 
     @Override
     public int hashCode() {
         return com.google.common.base.Objects.hashCode(id, snapshotIndicatorId,
-                indicator, reason, action, estimatedDate);
+                indicator, reason, action, estimatedDate, isAttainment);
     }
 }

@@ -1,14 +1,5 @@
 package py.org.fundacionparaguaya.pspserver.network.services.impl;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static org.springframework.data.jpa.domain.Specifications.where;
-import static py.org.fundacionparaguaya.pspserver.network.specifications.OrganizationSpecification.byFilter;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 import com.google.common.collect.ImmutableMultimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,12 +39,19 @@ import py.org.fundacionparaguaya.pspserver.system.dtos.ImageParser;
 import py.org.fundacionparaguaya.pspserver.system.services.ImageUploadService;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.springframework.data.jpa.domain.Specifications.where;
+import static py.org.fundacionparaguaya.pspserver.network.specifications.OrganizationSpecification.byFilter;
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
 
-    private static final Logger LOG = LoggerFactory
-            .getLogger(OrganizationServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrganizationServiceImpl.class);
 
     private final OrganizationRepository organizationRepository;
 
@@ -73,11 +71,11 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private final ApplicationProperties applicationProperties;
 
-    //CHECKSTYLE:OFF
     public OrganizationServiceImpl(
             OrganizationRepository organizationRepository,
             ApplicationRepository applicationRepository,
-            OrganizationMapper organizationMapper, FamilyService familyService,
+            OrganizationMapper organizationMapper,
+            FamilyService familyService,
             SnapshotEconomicRepository snapshotEconomicRepo,
             SnapshotIndicatorMapper indicatorMapper,
             SnapshotServiceImpl snapshotServiceImpl,
@@ -93,64 +91,57 @@ public class OrganizationServiceImpl implements OrganizationService {
         this.imageUploadService = imageUploadService;
         this.applicationProperties = applicationProperties;
     }
-  //CHECKSTYLE:ON
 
     @Override
-    public OrganizationDTO updateOrganization(Long organizationId,
-            OrganizationDTO organizationDTO) {
-        checkArgument(organizationId > 0,
-                "Argument was %s but expected nonnegative", organizationId);
+    public OrganizationDTO updateOrganization(Long organizationId, OrganizationDTO organizationDTO) {
+        checkArgument(organizationId > 0, "Argument was %s but expected nonnegative", organizationId);
 
-        return Optional
-                .ofNullable(organizationRepository.findOne(organizationId))
+        return Optional.ofNullable(
+                organizationRepository.findOne(organizationId))
                 .map(organization -> {
                     organization.setName(organizationDTO.getName());
-                    organization
-                            .setDescription(organizationDTO.getDescription());
-                    LOG.debug("Changed Information for Organization: {}",
-                            organization);
+                    organization.setDescription(organizationDTO.getDescription());
+                    LOG.debug("Changed Information for Organization: {}", organization);
                     return organizationRepository.save(organization);
-                }).map(organizationMapper::entityToDto)
-                .orElseThrow(() -> new UnknownResourceException(
-                        "Organization does not exist"));
+                })
+                .map(organizationMapper::entityToDto)
+                .orElseThrow(() -> new UnknownResourceException("Organization does not exist"));
     }
 
     @Override
     public OrganizationDTO getOrganizationById(Long organizationId) {
-        checkArgument(organizationId > 0,
-                "Argument was %s but expected nonnegative", organizationId);
+        checkArgument(organizationId > 0, "Argument was %s but expected nonnegative", organizationId);
 
-        return Optional
-                .ofNullable(organizationRepository.findOne(organizationId))
+        return Optional.ofNullable(
+                organizationRepository.findOne(organizationId))
                 .map(organizationMapper::entityToDto)
-                .orElseThrow(() -> new UnknownResourceException(
-                        "Organization does not exist"));
+                .orElseThrow(() -> new UnknownResourceException("Organization does not exist"));
     }
 
     @Override
     public List<OrganizationDTO> getAllOrganizations() {
-        List<OrganizationEntity> organizations = organizationRepository
-                .findAll();
+        List<OrganizationEntity> organizations = organizationRepository.findAll();
         return organizationMapper.entityListToDtoList(organizations);
     }
 
     @Override
-    public OrganizationDTO getOrganizationDashboard(Long organizationId,
-            UserDetailsDTO details) {
+    public OrganizationDTO getOrganizationDashboard(Long organizationId, UserDetailsDTO details) {
         OrganizationDTO dto = new OrganizationDTO();
 
-        if (details.getOrganization() != null
-                && details.getOrganization().getId() != null) {
+        if (details.getOrganization() != null && details.getOrganization().getId() != null) {
             dto = getOrganizationById(details.getOrganization().getId());
         } else if (organizationId != null) {
             dto = getOrganizationById(organizationId);
         }
 
         Long applicationId = Optional.ofNullable(details.getApplication())
-                .orElse(new ApplicationDTO()).getId();
+                .orElse(new ApplicationDTO())
+                .getId();
 
-        FamilyFilterDTO filter = new FamilyFilterDTO(applicationId,
-                dto.getId());
+        FamilyFilterDTO filter = FamilyFilterDTO.builder()
+                .applicationId(applicationId)
+                .organizationId(dto.getId())
+                .build();
 
         DashboardDTO dashboard = DashboardDTO.of(
                 familyService.countFamiliesByFilter(filter), null,
@@ -164,14 +155,11 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private SnapshotIndicators countSnapshotIndicators(Long organizationId) {
 
-        List<FamilyEntity> families = familyService
-                .findByOrganizationId(organizationId);
+        List<FamilyEntity> families = familyService.findByOrganizationId(organizationId);
 
-        List<SnapshotEconomicEntity> snapshotEconomics = snapshotEconomicRepo
-                .findByFamilyIn(families);
+        List<SnapshotEconomicEntity> snapshotEconomics = snapshotEconomicRepo.findByFamilyIn(families);
 
-        List<SnapshotIndicatorEntity> entityList =
-                new ArrayList<SnapshotIndicatorEntity>();
+        List<SnapshotIndicatorEntity> entityList = new ArrayList<SnapshotIndicatorEntity>();
 
         for (SnapshotEconomicEntity economics : snapshotEconomics) {
             entityList.add(economics.getSnapshotIndicator());
@@ -179,8 +167,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         SnapshotIndicators indicators = new SnapshotIndicators();
 
-        List<SurveyData> listProperties = indicatorMapper
-                .entityListToDtoList(entityList);
+        List<SurveyData> listProperties = indicatorMapper.entityListToDtoList(entityList);
 
         for (SurveyData properties : listProperties) {
             properties.forEach((k, v) -> {
@@ -189,40 +176,37 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
 
         return indicators;
-
     }
 
     private void countIndicators(SnapshotIndicators indicators, Object v) {
         Optional.ofNullable(SurveyStoplightEnum.fromValue(String.valueOf(v)))
                 .ifPresent(light -> {
                     switch (light) {
-                    case RED:
-                        indicators.setCountRedIndicators(
-                                indicators.getCountRedIndicators() + 1);
-                        break;
-                    case YELLOW:
-                        indicators.setCountYellowIndicators(
-                                indicators.getCountYellowIndicators() + 1);
-                        break;
-                    case GREEN:
-                        indicators.setCountGreenIndicators(
-                                indicators.getCountGreenIndicators() + 1);
-                        break;
-                    default:
-                        break;
+                        case RED:
+                            indicators.setCountRedIndicators(
+                                    indicators.getCountRedIndicators() + 1);
+                            break;
+                        case YELLOW:
+                            indicators.setCountYellowIndicators(
+                                    indicators.getCountYellowIndicators() + 1);
+                            break;
+                        case GREEN:
+                            indicators.setCountGreenIndicators(
+                                    indicators.getCountGreenIndicators() + 1);
+                            break;
+                        default:
+                            break;
                     }
                 });
     }
 
     @Override
-    public PaginableList<OrganizationDTO> listOrganizations(Long applicationId,
-            Long organizationId, int page, int perPage, String orderBy,
-            String sortBy) {
+    public PaginableList<OrganizationDTO> listOrganizations(Long applicationId, Long organizationId, int page,
+                                                            int perPage, String orderBy, String sortBy) {
 
         PaginableList<OrganizationDTO> response;
 
-        PageRequest pageRequest = new PspPageRequest(page, perPage, orderBy,
-                sortBy);
+        PageRequest pageRequest = new PspPageRequest(page, perPage, orderBy, sortBy);
 
         Page<OrganizationEntity> pageResponse = organizationRepository.findAll(
                 where(byFilter(applicationId, organizationId)), pageRequest);
@@ -233,53 +217,45 @@ public class OrganizationServiceImpl implements OrganizationService {
             Page<OrganizationDTO> organizationPage = pageResponse
                     .map(new Converter<OrganizationEntity, OrganizationDTO>() {
                         @Override
-                        public OrganizationDTO convert(
-                                OrganizationEntity source) {
+                        public OrganizationDTO convert(OrganizationEntity source) {
                             return organizationMapper.entityToDto(source);
                         }
                     });
 
-            response = new PaginableList<OrganizationDTO>(organizationPage,
-                    organizationPage.getContent());
+            response = new PaginableList<OrganizationDTO>(organizationPage, organizationPage.getContent());
         }
 
         return response;
-
     }
 
     @Override
-    public OrganizationDTO addOrganization(OrganizationDTO organizationDTO)
-            throws IOException {
-        organizationRepository.findOneByName(organizationDTO.getName())
+    public OrganizationDTO addOrganization(OrganizationDTO organizationDTO) throws IOException {
+        organizationRepository
+                .findOneByName(organizationDTO.getName())
                 .ifPresent(organization -> {
-                    throw new CustomParameterizedException(
-                            "Organisation already exists",
+                    throw new CustomParameterizedException("Organisation already exists",
                             new ImmutableMultimap.Builder<String, String>()
-                                    .put("name", organization.getName()).build()
+                                    .put("name", organization.getName())
+                                    .build()
                                     .asMap());
                 });
 
         // Save Organization entity
         OrganizationEntity organization = new OrganizationEntity();
         BeanUtils.copyProperties(organizationDTO, organization);
-        ApplicationEntity application = applicationRepository
-                .findById(organizationDTO.getApplication().getId());
+        ApplicationEntity application = applicationRepository.findById(organizationDTO.getApplication().getId());
         organization.setApplication(application);
         organization.setActive(true);
-        OrganizationEntity newOrganization = organizationRepository
-                .save(organization);
+        OrganizationEntity newOrganization = organizationRepository.save(organization);
 
         // Upload image to AWS S3 service
-        ImageDTO imageDTO = ImageParser.parse(organizationDTO.getFile());
-        imageDTO.setImageDirectory(
-                applicationProperties.getAws().getOrgsImageDirectory());
-        imageDTO.setImageNamePrefix(
-                applicationProperties.getAws().getOrgsImageNamePrefix());
+        if (organizationDTO.getFile() != null) {
+            ImageDTO imageDTO = ImageParser.parse(organizationDTO.getFile(),
+                                                  applicationProperties.getAws().getOrgsImageDirectory(),
+                                                  applicationProperties.getAws().getOrgsImageNamePrefix());
 
-        String logoURL = imageUploadService.uploadImage(imageDTO,
-                newOrganization.getId());
+            String logoURL = imageUploadService.uploadImage(imageDTO, newOrganization.getId());
 
-        if (logoURL != null) {
             // Update Organization entity with image URL
             newOrganization.setLogoUrl(logoURL);
             organizationRepository.save(newOrganization);
@@ -290,10 +266,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void deleteOrganization(Long organizationId) {
-        checkArgument(organizationId > 0,
-                "Argument was %s but expected nonnegative", organizationId);
+        checkArgument(organizationId > 0, "Argument was %s but expected nonnegative", organizationId);
 
-        Optional.ofNullable(organizationRepository.findOne(organizationId))
+        Optional.ofNullable(
+                organizationRepository.findOne(organizationId))
                 .ifPresent(organization -> {
                     organizationRepository.delete(organization);
                     LOG.debug("Deleted Organization: {}", organization);
@@ -301,13 +277,14 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Page<OrganizationDTO> listOrganizations(PageRequest pageRequest,
-            UserDetailsDTO userDetails) {
+    public Page<OrganizationDTO> listOrganizations(PageRequest pageRequest, UserDetailsDTO userDetails) {
         Long applicationId = Optional.ofNullable(userDetails.getApplication())
-                .orElse(new ApplicationDTO()).getId();
+                .orElse(new ApplicationDTO())
+                .getId();
 
         Long organizationId = Optional.ofNullable(userDetails.getOrganization())
-                .orElse(new OrganizationDTO()).getId();
+                .orElse(new OrganizationDTO())
+                .getId();
 
         Page<OrganizationEntity> pageResponse = organizationRepository.findAll(
                 where(byFilter(applicationId, organizationId)), pageRequest);
@@ -320,14 +297,19 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public OrganizationDTO getUserOrganization(UserDetailsDTO details,
-            Long organizationId) {
-        if (details.getOrganization() != null
-                && details.getOrganization().getId() != null) {
+    public OrganizationDTO getUserOrganization(UserDetailsDTO details, Long organizationId) {
+        if (details.getOrganization() != null && details.getOrganization().getId() != null) {
             return getOrganizationById(details.getOrganization().getId());
         } else if (organizationId != null) {
             return getOrganizationById(organizationId);
         }
         return null;
+    }
+
+    @Override
+    public List<OrganizationDTO> getOrganizationsByApplicationId(Long applicationId) {
+        List<OrganizationEntity> organizations =
+                                            organizationRepository.findByApplicationIdAndIsActive(applicationId, true);
+        return organizationMapper.entityListToDtoList(organizations);
     }
 }

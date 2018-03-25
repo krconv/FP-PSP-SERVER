@@ -76,3 +76,5 @@ And that is it ;), your server will be launched by default at http://localhost:8
 
 - Do you want to use Oauth2 Authentication in this project? [Read the OAUTH instructions](OAUTH.md)
 
+- Do you want to add support for more languages ​​or internationalize new messages? [Read the i18n instructions](I18N.md)
+

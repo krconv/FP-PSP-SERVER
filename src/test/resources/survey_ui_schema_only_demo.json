@@ -1,0 +1,141 @@
+{
+  "properties": {},
+
+  "ui:custom:fields" : {
+     "income" : {
+        "ui:field": "gallery"
+      },
+      "documentation" : {
+        "ui:field": "gallery"
+      },
+      "drinkingWaterAccess" : {
+        "ui:field": "gallery"
+      },
+      "garbageDisposal" : {
+        "ui:field": "gallery"
+      },
+      "safeHouse" : {
+        "ui:field": "gallery"
+      },
+      "safeBathroom" : {
+        "ui:field": "gallery"
+      },
+      "separateBed" : {
+        "ui:field": "gallery"
+      },
+      "phone" : {
+        "ui:field": "gallery"
+      },
+      "security" : {
+        "ui:field": "gallery"
+      },
+      "readAndWrite" : {
+        "ui:field": "gallery"
+      },
+      "terereConsumption" : {
+        "ui:field": "gallery"
+      },
+      "familyUbication": {
+         "ui:field": "gmap"
+      },
+      "householdMonthlyIncome": {
+      	"ui:field": "numberFormat"
+      },
+      "salaryIncome": {
+      	"ui:field": "numberFormat"
+      },
+      "benefitIncome": {
+      	"ui:field": "numberFormat"
+      },
+      "pensionIncome": {
+      	"ui:field": "numberFormat"
+      },
+      "savingsIncome": {
+      	"ui:field": "numberFormat"
+      },
+      "otherIncome": {
+      	"ui:field": "numberFormat"
+      },
+      "householdMonthlyOutgoing": {
+      	"ui:field": "numberFormat"
+      },
+      "netSuplus": {
+      	"ui:field": "numberFormat"
+      },
+      "birthdate": {
+			"ui:field": "date"
+	  }
+   },
+
+  "ui:order": [
+    "identificationType",
+  	"identificationNumber",
+  	"firstName",
+  	"lastName",
+  	"birthdate",
+  	"countryOfBirth",
+  	"gender",
+  	"phoneNumber",
+
+
+    "income",
+    "documentation",
+    "drinkingWaterAccess",
+    "garbageDisposal",
+    "safeHouse",
+    "safeBathroom",
+    "separateBed",
+    "phone",
+    "security",
+    "readAndWrite"
+  ],
+
+  "ui:group:personal": [
+  	"identificationType",
+  	"identificationNumber",
+  	"firstName",
+  	"lastName",
+  	"birthdate",
+  	"countryOfBirth",
+  	"gender",
+  	"phoneNumber"
+  ],
+
+  "ui:group:economics": [
+    "currency",
+    "areaOfResidence",
+    "employmentStatusPrimary",
+    "activityMain",
+    "employmentStatusSecondary",
+    "activitySecondary",
+    "householdMonthlyIncome",
+    "salaryIncome",
+    "benefitIncome",
+    "pensionIncome",
+    "savingsIncome",
+    "otherIncome",
+    "householdMonthlyOutgoing",
+    "netSuplus",
+    "educationClientLevel",
+    "educationPersonMostStudied",
+    "educationLevelAttained",
+    "housingSituation",
+    "otherUsefulInfo",
+    "familyCountry",
+    "familyCity",
+    "familyUbication"
+  ],
+
+  "ui:group:indicators": [	
+    "income",
+    "documentation",
+    "drinkingWaterAccess",
+    "garbageDisposal",
+    "safeHouse",
+    "safeBathroom",
+    "separateBed",
+    "phone",
+    "security",
+    "readAndWrite"
+  ]
+}

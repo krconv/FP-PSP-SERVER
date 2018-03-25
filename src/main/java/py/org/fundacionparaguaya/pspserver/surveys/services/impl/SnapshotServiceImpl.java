@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.CustomParameterizedException;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.UnknownResourceException;
+import py.org.fundacionparaguaya.pspserver.config.I18n;
 import py.org.fundacionparaguaya.pspserver.families.dtos.FamilyFilterDTO;
 import py.org.fundacionparaguaya.pspserver.families.entities.FamilyEntity;
 import py.org.fundacionparaguaya.pspserver.families.entities.PersonEntity;
@@ -60,17 +61,19 @@ public class SnapshotServiceImpl implements SnapshotService {
 
     private final FamilyService familyService;
 
+    private final I18n i18n;
+
     private static final String INDICATOR_NAME = "name";
 
     private static final String INDICATOR_VALUE = "value";
 
     // CHECKSTYLE:OFF
     public SnapshotServiceImpl(SnapshotEconomicRepository economicRepository,
-                               SnapshotEconomicMapper economicMapper, SurveyService surveyService,
-                               SnapshotIndicatorMapper indicatorMapper,
-                               SnapshotIndicatorPriorityService priorityService,
-                               PersonMapper personMapper,
-                               FamilyService familyService) {
+            SnapshotEconomicMapper economicMapper, SurveyService surveyService,
+            SnapshotIndicatorMapper indicatorMapper,
+            SnapshotIndicatorPriorityService priorityService,
+            PersonMapper personMapper, FamilyService familyService,
+            I18n i18n) {
         this.economicRepository = economicRepository;
         this.economicMapper = economicMapper;
         this.surveyService = surveyService;
@@ -78,20 +81,21 @@ public class SnapshotServiceImpl implements SnapshotService {
         this.priorityService = priorityService;
         this.personMapper = personMapper;
         this.familyService = familyService;
+        this.i18n = i18n;
     }
     // CHECKSTYLE:ON
 
     @Override
     @Transactional
     public Snapshot addSurveySnapshot(UserDetailsDTO details,
-                                      NewSnapshot snapshot) {
-
+            NewSnapshot snapshot) {
         checkNotNull(snapshot);
 
         ValidationResults results = surveyService
                 .checkSchemaCompliance(snapshot);
         if (!results.isValid()) {
-            throw new CustomParameterizedException("Invalid Snapshot",
+            throw new CustomParameterizedException(
+                    i18n.translate("snapshot.invalid"),
                     results.asMap());
         }
 
@@ -101,18 +105,20 @@ public class SnapshotServiceImpl implements SnapshotService {
         PersonEntity personEntity = personMapper
                 .snapshotPersonalToEntity(snapshot);
 
-        FamilyEntity family = familyService.getOrCreateFamilyFromSnapshot(details, snapshot, personEntity);
+        FamilyEntity family = familyService
+                .getOrCreateFamilyFromSnapshot(details, snapshot, personEntity);
+
+        SnapshotEconomicEntity snapshotEconomicEntity = saveEconomic(snapshot,
+                indicatorEntity, family);
 
 
-        SnapshotEconomicEntity snapshotEconomicEntity = saveEconomic(snapshot, indicatorEntity,
-                family);
+        familyService.updateFamily(family.getFamilyId());
 
         return economicMapper.entityToDto(snapshotEconomicEntity);
     }
 
-
     private SnapshotEconomicEntity saveEconomic(NewSnapshot snapshot,
-                                                SnapshotIndicatorEntity indicator, FamilyEntity family) {
+            SnapshotIndicatorEntity indicator, FamilyEntity family) {
 
         SnapshotEconomicEntity entity = economicMapper
                 .newSnapshotToEconomicEntity(snapshot, indicator);
@@ -127,7 +133,8 @@ public class SnapshotServiceImpl implements SnapshotService {
         return economicRepository.findAll(
                 where(SnapshotEconomicSpecification.forSurvey(surveyId))
                         .and(SnapshotEconomicSpecification.forFamily(familyId)))
-                .stream().map(economicMapper::entityToDto)
+                .stream()
+                .map(economicMapper::entityToDto)
                 .collect(Collectors.toList());
     }
 
@@ -172,14 +179,13 @@ public class SnapshotServiceImpl implements SnapshotService {
     private List<SurveyData> getIndicatorsValue(
             SnapshotEconomicEntity snapshotEconomic, SnapshotIndicators toRet) {
 
-        SurveyDefinition survey =
-                surveyService.getSurveyDefinition(snapshotEconomic.getSurveyDefinition().getId());
+        SurveyDefinition survey = surveyService.getSurveyDefinition(
+                snapshotEconomic.getSurveyDefinition().getId());
 
-        List<String> indicatorGroup = survey
-                .getSurveyUISchema().getGroupIndicators();
+        List<String> indicatorGroup = survey.getSurveyUISchema()
+                .getGroupIndicators();
 
-        List<String> order = survey.getSurveyUISchema()
-                .getUiOrder().stream()
+        List<String> order = survey.getSurveyUISchema().getUiOrder().stream()
                 .filter(field -> indicatorGroup.contains(field))
                 .collect(Collectors.toList());
 
@@ -220,7 +226,8 @@ public class SnapshotServiceImpl implements SnapshotService {
             Long familyId) {
         List<SnapshotIndicators> toRet = new ArrayList<>();
         List<SnapshotEconomicEntity> originalSnapshots = economicRepository
-                .findByFamilyFamilyId(familyId).stream()
+                .findByFamilyFamilyId(familyId)
+                .stream()
                 .collect(Collectors.toList());
 
         for (SnapshotEconomicEntity os : originalSnapshots) {
@@ -253,8 +260,8 @@ public class SnapshotServiceImpl implements SnapshotService {
             });
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            throw new UnknownResourceException("Could not get indicators of "
-                    + "the snapshot with id " + snapshot.getId());
+            throw new UnknownResourceException(i18n.translate(
+                    "snapshot.invalid", snapshot.getId()));
         }
         return indicators;
     }
@@ -263,20 +270,20 @@ public class SnapshotServiceImpl implements SnapshotService {
         Optional.ofNullable(SurveyStoplightEnum.fromValue(String.valueOf(v)))
                 .ifPresent(light -> {
                     switch (light) {
-                        case RED:
-                            indicators.setCountRedIndicators(
-                                    indicators.getCountRedIndicators() + 1);
-                            break;
-                        case YELLOW:
-                            indicators.setCountYellowIndicators(
-                                    indicators.getCountYellowIndicators() + 1);
-                            break;
-                        case GREEN:
-                            indicators.setCountGreenIndicators(
-                                    indicators.getCountGreenIndicators() + 1);
-                            break;
-                        default:
-                            break;
+                    case RED:
+                        indicators.setCountRedIndicators(
+                                indicators.getCountRedIndicators() + 1);
+                        break;
+                    case YELLOW:
+                        indicators.setCountYellowIndicators(
+                                indicators.getCountYellowIndicators() + 1);
+                        break;
+                    case GREEN:
+                        indicators.setCountGreenIndicators(
+                                indicators.getCountGreenIndicators() + 1);
+                        break;
+                    default:
+                        break;
                     }
                 });
     }
@@ -295,11 +302,13 @@ public class SnapshotServiceImpl implements SnapshotService {
             familyId = snapshotEconomicEntity.getFamily().getFamilyId();
         }
 
-        priorityService.deletePrioritiesByIndicator(snapshotEconomicEntity.getSnapshotIndicator().getId());
+        priorityService.deletePrioritiesByIndicator(
+                snapshotEconomicEntity.getSnapshotIndicator().getId());
 
         economicRepository.delete(snapshotEconomicEntity);
 
-        if (familyId != null && economicRepository.findByFamilyFamilyId(familyId).size() == 0) {
+        if (familyId != null && economicRepository
+                .findByFamilyFamilyId(familyId).size() == 0) {
             familyService.deleteFamily(familyId);
         }
 
@@ -307,9 +316,8 @@ public class SnapshotServiceImpl implements SnapshotService {
 
     @Override
     public SnapshotTaken countSnapshotTaken(FamilyFilterDTO filter) {
-        List<SnapshotEconomicEntity> snapshots =
-                getSnapshotsLess2MonthsByFamilies(
-                        filter);
+        List<SnapshotEconomicEntity> snapshots = getSnapshotsLess2MonthsByFamilies(
+                filter);
 
         Map<String, Long> result = snapshots.stream().collect(
 
@@ -329,9 +337,9 @@ public class SnapshotServiceImpl implements SnapshotService {
 
     private List<SnapshotEconomicEntity> getSnapshotsLess2MonthsByFamilies(
             FamilyFilterDTO filter) {
-        return economicRepository.findAll(where(
-                byApplication(filter.getApplicationId()))
-                .and(createdAtLess2Months()));
+        return economicRepository
+                .findAll(where(byApplication(filter.getApplicationId()))
+                        .and(createdAtLess2Months()));
     }
 
     @Override
@@ -344,8 +352,7 @@ public class SnapshotServiceImpl implements SnapshotService {
                         .map(economic -> economic.getSnapshotIndicator())
                         .collect(Collectors.toList()));
 
-        Map<String, TopOfIndicators> topOfIndicatorMap =
-                new HashMap<String, TopOfIndicators>();
+        Map<String, TopOfIndicators> topOfIndicatorMap = new HashMap<String, TopOfIndicators>();
 
         for (SurveyData surveyData : propertiesList) {
             surveyData.forEach((key, value) -> {
@@ -363,13 +370,14 @@ public class SnapshotServiceImpl implements SnapshotService {
     @Override
     public void deleteSnapshotsBySurvey(UserDetailsDTO user, Long surveyId) {
         if (!user.hasRole(Role.ROLE_ROOT)) {
-            LOG.warn("[OPERATION_NOT_ALLOWED] Only {} can remove snapshots", Role.ROLE_ROOT);
+            LOG.warn("[OPERATION_NOT_ALLOWED] Only {} can remove snapshots",
+                    Role.ROLE_ROOT);
             return;
         }
-        economicRepository.findBySurveyDefinitionId(surveyId)
-                .stream()
+        economicRepository.findBySurveyDefinitionId(surveyId).stream()
                 .forEach(economicEntity -> {
-                    LOG.debug("Going to delete snapshot economic with id: {}", economicEntity.getId());
+                    LOG.debug("Going to delete snapshot economic with id: {}",
+                            economicEntity.getId());
                     this.deleteSnapshotById(economicEntity.getId());
                 });
     }
@@ -382,24 +390,23 @@ public class SnapshotServiceImpl implements SnapshotService {
 
         if (topOfIndicators == null) {
             topOfIndicators = new TopOfIndicators();
-            topOfIndicators
-                    .setIndicatorName(getNameFromCamelCase(key));
+            topOfIndicators.setIndicatorName(getNameFromCamelCase(key));
             topOfIndicatorMap.put(key, topOfIndicators);
         }
 
         if (light != null) {
             switch (light) {
-                case "RED":
-                    topOfIndicators.incrementRed();
-                    break;
-                case "YELLOW":
-                    topOfIndicators.incrementYellow();
-                    break;
-                case "GREEN":
-                    topOfIndicators.incrementGreen();
-                    break;
-                default:
-                    break;
+            case "RED":
+                topOfIndicators.incrementRed();
+                break;
+            case "YELLOW":
+                topOfIndicators.incrementYellow();
+                break;
+            case "GREEN":
+                topOfIndicators.incrementGreen();
+                break;
+            default:
+                break;
             }
         }
     }

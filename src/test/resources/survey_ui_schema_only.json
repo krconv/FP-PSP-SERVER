@@ -75,7 +75,7 @@
         "ui:field": "gallery"
       },
       "familyUbication": {
-      	"ui:field": "gmap"
+         "ui:field": "gmap"
       },
       "householdMonthlyIncome": {
       	"ui:field": "numberFormat"
@@ -100,7 +100,10 @@
       },
       "netSuplus": {
       	"ui:field": "numberFormat"
-      }
+      },
+      "birthdate": {
+			"ui:field": "date"
+	  }
    },
 
   "ui:order": [

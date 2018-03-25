@@ -1,17 +1,5 @@
 package py.org.fundacionparaguaya.pspserver.web.rest;
 
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.ArrayList;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,11 +14,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import py.org.fundacionparaguaya.pspserver.network.dtos.ApplicationDTO;
 import py.org.fundacionparaguaya.pspserver.network.dtos.DashboardDTO;
 import py.org.fundacionparaguaya.pspserver.network.services.ApplicationService;
+import py.org.fundacionparaguaya.pspserver.network.services.OrganizationService;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.SnapshotIndicators;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.SnapshotTaken;
 import py.org.fundacionparaguaya.pspserver.system.dtos.CityDTO;
 import py.org.fundacionparaguaya.pspserver.system.dtos.CountryDTO;
 import py.org.fundacionparaguaya.pspserver.util.TestHelper;
+
+import java.util.ArrayList;
+
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  *
@@ -48,49 +49,61 @@ public class ApplicationControllerTest {
     @MockBean
     private ApplicationService applicationService;
 
+    //CHECKSTYLE:OFF
+    @MockBean
+    private OrganizationService organizationService;
+    //CHECKSTYLE:ON
+
     private ApplicationDTO mockApplication;
 
     @Before
     public void setup() {
-
-        mockApplication = ApplicationDTO.builder().name("foo.name")
-                .code("foo.code").description("foo.description").isActive(true)
-                .country(getCountryTest()).city(getCityTest())
-                .information("foo.information").isHub(true).isOrganization(true)
-                .dashboard(getDashboardTest()).build();
-
+        mockApplication = ApplicationDTO.builder()
+                .name("foo.name")
+                .code("foo.code")
+                .description("foo.description")
+                .isActive(true)
+                .country(getCountryTest())
+                .city(getCityTest())
+                .information("foo.information")
+                .isHub(true)
+                .isPartner(true)
+                .build();
     }
 
     @Test
-    public void requestingPutApplicationShouldAddNewApplication()
-            throws Exception {
+    public void requestingPutApplicationShouldAddNewApplication() throws Exception {
 
-        when(applicationService.addApplication(anyObject()))
+        when(applicationService
+                .addApplication(anyObject()))
                 .thenReturn(mockApplication);
 
         String json = TestHelper.mapToJson(mockApplication);
 
-        mockMvc.perform(post("/api/v1/applications").content(json)
-                .contentType(MediaType.APPLICATION_JSON)).andDo(print())
+        mockMvc.perform(post("/api/v1/applications")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", is(mockApplication.getName())));
     }
 
     @Test
-    public void requestingPostApplicationShouldUpdateApplication()
-            throws Exception {
+    public void requestingPostApplicationShouldUpdateApplication() throws Exception {
         Long applicationId = 9999L;
 
-        when(applicationService.updateApplication(eq(applicationId),
-                anyObject())).thenReturn(mockApplication);
+        when(applicationService
+                .updateApplication(eq(applicationId), anyObject()))
+                .thenReturn(mockApplication);
 
         String json = TestHelper.mapToJson(mockApplication);
-        mockMvc.perform(
-                put("/api/v1/applications/{applicationId}", applicationId)
-                        .content(json).contentType(MediaType.APPLICATION_JSON))
-                .andDo(print()).andExpect(status().isOk())
+        mockMvc
+                .perform(put("/api/v1/applications/{applicationId}", applicationId)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(mockApplication.getName())));
-
     }
 
     private CountryDTO getCountryTest() {

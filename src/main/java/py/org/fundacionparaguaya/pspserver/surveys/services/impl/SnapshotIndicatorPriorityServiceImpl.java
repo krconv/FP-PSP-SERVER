@@ -2,10 +2,13 @@ package py.org.fundacionparaguaya.pspserver.surveys.services.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.CustomParameterizedException;
 import py.org.fundacionparaguaya.pspserver.common.exceptions.UnknownResourceException;
-import py.org.fundacionparaguaya.pspserver.surveys.dtos.IndicatorsPriority;
+import py.org.fundacionparaguaya.pspserver.config.I18n;
+import py.org.fundacionparaguaya.pspserver.families.events.PriorityCreatedEvent;
 import py.org.fundacionparaguaya.pspserver.surveys.dtos.SnapshotIndicatorPriority;
 import py.org.fundacionparaguaya.pspserver.surveys.entities.SnapshotIndicatorEntity;
 import py.org.fundacionparaguaya.pspserver.surveys.entities.SnapshotIndicatorPriorityEntity;
@@ -14,21 +17,21 @@ import py.org.fundacionparaguaya.pspserver.surveys.repositories.SnapshotIndicato
 import py.org.fundacionparaguaya.pspserver.surveys.repositories.SnapshotIndicatorRepository;
 import py.org.fundacionparaguaya.pspserver.surveys.services.SnapshotIndicatorPriorityService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * 
  * @author mgonzalez
  *
  */
 @Service
-public class SnapshotIndicatorPriorityServiceImpl implements SnapshotIndicatorPriorityService {
+public class SnapshotIndicatorPriorityServiceImpl
+        implements SnapshotIndicatorPriorityService {
 
-    private Logger LOG = LoggerFactory.getLogger(SnapshotIndicatorPriorityServiceImpl.class);
+    private static final Logger LOG = LoggerFactory
+            .getLogger(SnapshotIndicatorPriorityServiceImpl.class);
 
     private SnapshotIndicatorPriorityRepository snapshotPriorityRepository;
 
@@ -36,145 +39,128 @@ public class SnapshotIndicatorPriorityServiceImpl implements SnapshotIndicatorPr
 
     private final SnapshotIndicatorPriorityMapper snapshotPriorityMapper;
 
-    public SnapshotIndicatorPriorityServiceImpl(SnapshotIndicatorPriorityRepository snapshotPriorityRepository,
+    private final I18n i18n;
+
+    private final ApplicationEventPublisher publisher;
+
+    public SnapshotIndicatorPriorityServiceImpl(
+            SnapshotIndicatorPriorityRepository snapshotPriorityRepository,
             SnapshotIndicatorRepository snapshotIndicatorRepository,
-            SnapshotIndicatorPriorityMapper snapshotPriorityMapper) {
+            SnapshotIndicatorPriorityMapper snapshotPriorityMapper, I18n i18n, ApplicationEventPublisher publisher) {
+
         this.snapshotPriorityRepository = snapshotPriorityRepository;
         this.snapshotIndicatorRepository = snapshotIndicatorRepository;
         this.snapshotPriorityMapper = snapshotPriorityMapper;
+        this.i18n = i18n;
+        this.publisher = publisher;
     }
 
     @Override
+
     public List<SnapshotIndicatorPriority> getSnapshotIndicatorPriorityList(Long snapshotIndicatorId) {
-        checkArgument(snapshotIndicatorId > 0, "Argument was %s but expected nonnegative", snapshotIndicatorId);
 
-        List<SnapshotIndicatorPriorityEntity> priorities = snapshotPriorityRepository
-                .findBySnapshotIndicatorId(snapshotIndicatorId);
+        checkArgument(snapshotIndicatorId > 0,
+                i18n.translate("argument.nonNegative", snapshotIndicatorId));
 
-        List<SnapshotIndicatorPriority> toRet = new ArrayList<>();
-        toRet = snapshotPriorityMapper.entityListToDtoList(priorities);
+        List<SnapshotIndicatorPriorityEntity> priorities =
+                snapshotPriorityRepository
+                   .findBySnapshotIndicatorId(snapshotIndicatorId);
 
-        return toRet;
+        return snapshotPriorityMapper.entityListToDtoList(priorities);
     }
 
     @Override
-    public IndicatorsPriority addSnapshotIndicadorPriorityList(IndicatorsPriority priorities) {
-        checkArgument(priorities != null, "Argument was %s but expected not null", priorities);
-        checkArgument(priorities.getSnapshotIndicatorId() != null, "Argument was %s but expected not null",
-                priorities.getSnapshotIndicatorId());
-        checkArgument(priorities.getPriorities() != null && !priorities.getPriorities().isEmpty(),
-                "Argument was %s but expected not empty", priorities);
+    public SnapshotIndicatorPriority updateSnapshotIndicatorPriority(
+            SnapshotIndicatorPriority priority) {
+        checkArgument(priority.getId() > 0,
+                i18n.translate("argument.nonNegative", priority.getId()));
 
-        List<SnapshotIndicatorPriorityEntity> snapshotsPriorities = snapshotPriorityMapper
-                .dtoListToEntityList(priorities.getPriorities());
-        SnapshotIndicatorEntity indicator = snapshotIndicatorRepository.findOne(priorities.getSnapshotIndicatorId());
-
-        for (SnapshotIndicatorPriorityEntity s : snapshotsPriorities) {
-            s.setSnapshotIndicator(indicator);
-        }
-        snapshotsPriorities = snapshotPriorityRepository.save(snapshotsPriorities);
-
-        IndicatorsPriority toRet = new IndicatorsPriority();
-        toRet.setPriorities(snapshotPriorityMapper.entityListToDtoList(snapshotsPriorities));
-        toRet.setSnapshotIndicatorId(priorities.getSnapshotIndicatorId());
-
-        return toRet;
-    }
-
-    @Override
-    public IndicatorsPriority updateSnapshotIndicatorPriorityList(IndicatorsPriority priorities) {
-        checkArgument(priorities != null, "Argument was %s but expected not null", priorities);
-        checkArgument(priorities.getSnapshotIndicatorId() != null, "Argument was %s but expected not null",
-                priorities.getSnapshotIndicatorId());
-        checkArgument(priorities.getPriorities() != null && !priorities.getPriorities().isEmpty(),
-                "Argument was %s but expected not empty", priorities);
-
-        IndicatorsPriority toRet = new IndicatorsPriority();
-        List<SnapshotIndicatorPriority> indicartorsPriority = new ArrayList<>();
-
-        for (SnapshotIndicatorPriority s : priorities.getPriorities()) {
-            Optional<SnapshotIndicatorPriorityEntity> entity = snapshotPriorityRepository
-                    .findBySnapshotIndicatorIdAndId(priorities.getSnapshotIndicatorId(),
-                            s.getId());
-
-            if (entity.isPresent()) {
-                entity.get().setAction(s.getAction());
-                entity.get().setEstimatedDateAsISOString(s.getEstimatedDate());
-                entity.get().setReason(s.getReason());
-                snapshotPriorityRepository.save(entity.get());
-                indicartorsPriority.add(snapshotPriorityMapper.entityToDto(entity.get()));
-            } else {
-                throw new UnknownResourceException("Snapshot indicator priority with id "
-                        + s.getId() + " does not exist");
-            }
-
-            toRet.setPriorities(indicartorsPriority);
-            toRet.setSnapshotIndicatorId(priorities.getSnapshotIndicatorId());
-
-        }
-
-        return toRet;
-    }
-
-    @Override
-    public SnapshotIndicatorPriority updateSnapshotIndicatorPriority(SnapshotIndicatorPriority priority) {
-        checkArgument(priority.getId() > 0, "Argument was %s but expected nonnegative",
-                priority.getId());
-
-        return Optional.ofNullable(snapshotPriorityRepository.findOne(priority.getId()))
+        return Optional
+                .ofNullable(
+                        snapshotPriorityRepository.findOne(priority.getId()))
                 .map(p -> {
                     p.setAction(priority.getAction());
                     p.setReason(priority.getReason());
                     p.setEstimatedDateAsISOString(priority.getEstimatedDate());
-                    LOG.debug("Changed Information for Snapshot Indicator Priority: {}", p);
+                    LOG.debug(
+                            "Changed Information for"
+                            + " Snapshot Indicator Priority: {}",
+                            p);
                     return snapshotPriorityRepository.save(p);
                 }).map(snapshotPriorityMapper::entityToDto)
-                .orElseThrow(() -> new UnknownResourceException("Snapshot Indicator Priority does not exist"));
+                .orElseThrow(() -> new UnknownResourceException(
+                        i18n.translate("snapshotPriority.notExist", priority.getId())));
     }
 
     @Override
-    public SnapshotIndicatorPriority addSnapshotIndicatorPriority(SnapshotIndicatorPriority priority){
+    @Transactional
+    public SnapshotIndicatorPriority addSnapshotIndicatorPriority(
+            SnapshotIndicatorPriority priority) {
 
-        checkArgument(priority != null, "Argument was %s but expected not null", priority);
-        checkArgument(priority.getSnapshotIndicatorId() > 0, "Argument was %s but expected nonnegative",
+        checkArgument(priority != null, i18n.translate("argument.notNull", priority));
+        checkArgument(priority.getSnapshotIndicatorId() > 0,
+                "Argument was %s but expected nonnegative",
                 priority.getSnapshotIndicatorId());
 
-        if(snapshotPriorityRepository.countAllBySnapshotIndicatorId(priority.getSnapshotIndicatorId())>=5) {
-            throw new CustomParameterizedException("There are already five priorities");
+        if (!priority.getIsAttainment()
+                && snapshotPriorityRepository.
+                countAllBySnapshotIndicatorIdAndIsAttainmentFalse(
+                priority.getSnapshotIndicatorId()) >= 5) {
+            throw new CustomParameterizedException(
+                    i18n.translate("snapshotPriority.onlyFivePriorities"));
         }
-        
-        SnapshotIndicatorPriorityEntity entity = new SnapshotIndicatorPriorityEntity();
+
+        SnapshotIndicatorPriorityEntity entity =
+                new SnapshotIndicatorPriorityEntity();
         entity.setReason(priority.getReason());
         entity.setAction(priority.getAction());
         entity.setIndicator(priority.getIndicator());
+        entity.setIsAttainment(priority.getIsAttainment());
         entity.setEstimatedDateAsISOString(priority.getEstimatedDate());
-        entity.setSnapshotIndicator(snapshotIndicatorRepository.getOne(priority.getSnapshotIndicatorId()));
+
+        SnapshotIndicatorEntity indicator = snapshotIndicatorRepository
+                .getOne(priority.getSnapshotIndicatorId());
+        entity.setSnapshotIndicator(indicator);
+
 
         SnapshotIndicatorPriorityEntity newSnapshotIndicatorPriority = snapshotPriorityRepository.save(entity);
+
+        // We publish this event so that other components can
+        // execute some operations on other entities, like an update
+        // on the familiy#lastmModifiedAt property:
+        // https://github.com/FundacionParaguaya/FP-PSP-SERVER/issues/134
+        // In this way we only need one extra dependency in this service.
+        publisher.publishEvent(PriorityCreatedEvent.of(indicator));
+
         return snapshotPriorityMapper.entityToDto(newSnapshotIndicatorPriority);
+
     }
 
     @Override
     public void deletePrioritiesByIndicator(Long snapshotIndicatorId) {
-            List<SnapshotIndicatorPriorityEntity> priorities =
-                    snapshotPriorityRepository
-                            .findBySnapshotIndicatorId(snapshotIndicatorId);
 
-            if (priorities != null && !priorities.isEmpty()) {
-                snapshotPriorityRepository.delete(priorities);
-            }
+        List<SnapshotIndicatorPriorityEntity> priorities =
+                snapshotPriorityRepository
+                .findBySnapshotIndicatorId(snapshotIndicatorId);
+
+        if (priorities != null && !priorities.isEmpty()) {
+            snapshotPriorityRepository.delete(priorities);
+        }
 
     }
 
     @Override
     public void deleteSnapshotIndicatorPriority(Long snapshotIndicatorPriorityId) {
-        checkArgument(snapshotIndicatorPriorityId > 0, "Argument was %s but expected nonnegative",
-                snapshotIndicatorPriorityId);
+        checkArgument(snapshotIndicatorPriorityId > 0,
+                i18n.translate("argument.nonNegative", snapshotIndicatorPriorityId));
 
-        Optional.ofNullable(snapshotPriorityRepository.findOne(snapshotIndicatorPriorityId)).ifPresent(priority -> {
-            snapshotPriorityRepository.delete(priority);
-            LOG.debug("Deleted Snapshot Indicator Priority: {}", priority);
-        });
+        Optional.ofNullable(
+                snapshotPriorityRepository.findOne(snapshotIndicatorPriorityId))
+                .ifPresent(priority -> {
+                    snapshotPriorityRepository.delete(priority);
+                    LOG.debug("Deleted Snapshot Indicator Priority: {}",
+                            priority);
+                });
 
     }
 
